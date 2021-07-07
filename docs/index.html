@@ -1,88 +1,130 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>data koality - open data validator</title>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>data koality - open data validator</title>
 
-    <!-- Bootstrap core CSS -->
-    <link href="css/bootstrap.min.css" rel="stylesheet">
-    <!-- Custom styles -->
-    <link href="css/style.css" rel="stylesheet">
+        <!-- Bootstrap core CSS -->
+        <link href="css/bootstrap.min.css" rel="stylesheet">
+        <!-- Custom styles -->
+        <link href="css/style.css" rel="stylesheet">
 
-    <!-- Favicon -->
-    <link rel="apple-touch-icon" sizes="180x180" href="img/fav/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="img/fav/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="img/fav/favicon-16x16.png">
-    <link rel="manifest" href="img/fav/site.webmanifest">
-  </head>
+        <!-- Favicon -->
+        <link rel="apple-touch-icon" sizes="180x180" href="img/fav/apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="img/fav/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="img/fav/favicon-16x16.png">
+        <link rel="manifest" href="img/fav/site.webmanifest">
+    </head>
 
-  <body>
-    
-    <main>
+    <body>
+        
+        <main>
 
-      <!-- Logo and title -->
-      <div class="px-4 my-5 text-center">
+            <!-- Logo and title -->
+            <header class="px-5 my-5 text-center">
 
-        <!-- Show fixed width image if device is large enough, otherwise show width% version -->
-        <img class="d-lg-none mx-auto" src="img/logo_green.svg" alt="data koality" width="50%">
-        <img class="d-none d-lg-block mx-auto" src="img/logo_green.svg" alt="data koality" width="360em">
-        <!--<h1 class="display-5 fw-bold">Data Koality</h1>-->
-        <div class="col-lg-6 mx-auto">
-          <p class="my-4 fst-italic text-secondary fs-5">Open data validation using Semantic Web technologies</p>
-          <div class="my-5 d-grid gap-4 d-sm-flex justify-content-sm-center align-items-center">
-            <button type="button" class="btn btn-outline-primary btn-lg px-4">Validate a data set</button>
-            <a class="px-4" href="https://github.com/osoc-es/data-quality-madrid">Check the code on GitHub</a>
-          </div>
-        </div>
-      </div>
-
-      <hr>
+                <!-- Show fixed width image if device is large enough, otherwise show width% version -->
+                <img class="d-lg-none mx-auto" src="img/logo_green.svg" alt="data koality" width="50%">
+                <img class="d-none d-lg-block mx-auto" src="img/logo_green.svg" alt="data koality" width="360em">
+                <div class="col-lg-6 mx-auto">
+                    <p class="my-4 fst-italic text-secondary fs-5">Open data validation using Semantic Web technologies.</p>
+                    <div class="my-5 d-grid gap-4 d-sm-flex justify-content-sm-center align-items-center">
+                        <button type="button" class="btn btn-outline-primary btn-lg px-4">Validate a data set</button>
+                        <a class="px-4" href="https://github.com/osoc-es/data-quality-madrid">Check the code on GitHub</a>
+                    </div>
+                </div>
+            </header>
 
 
-      <div class="container col-xxl-8 px-4 py-3">
-        <div class="row flex-lg-row-reverse align-items-center g-5 py-2">
-          <div class="d-none d-lg-block col-10 col-sm-8 col-lg-6">
-            <img src="img/graphic_1.svg" class="d-block mx-lg-auto img-fluid" alt="alt TODO" width="200"loading="lazy">
-          </div>
-          <div class="col-lg-6">
-            <h1 class="display-5 mb-3 text-primary">problem</h1>
-            <p>Many government open data initiatives (like datos.gob in Spain) present usability problems when users and developers want to interpret and make use of the data they provide. The quality metrics they usually follow are based on quantity, which creates the issue of the “data graveyards”:
-            <ul>
-              <li><p>The site stores a large amount of unnecessary & ill-formatted data, since it still computes as “correct” data.</p></li>
-              <li><p>“Good”, usable data is mixed with “bad” data and the set becomes illegible and unusable, requiring a lot of work from the data consumer’s part in order to improve its presentation.</p></li>
-            </ul>
-          </div>
-        </div>
-      </div>
+            <hr class="my-5">
 
-      <div class="container col-xxl-8 px-4 py-3">
-        <div class="row flex-lg-row-reverse align-items-center g-5 py-2">
-          <div class="col-lg-6">
-            <h1 class="display-5 mb-3 text-primary">objective</h1>
-            <p>We want to encourage the creation of usable open data, validating and cleaning it up, provided by open data sources (mainly datos.gob).</p>
-            <p>The second objective is to present this validated data in an easy-to-use way for developers to use, and an easy-to-read way for reading and analysis by hand, as well as providing a validation summary that explains how the data was analyzed and where its quality score comes from.</p>
-          </div>
-          <div class="d-none d-lg-block col-10 col-sm-8 col-lg-6">
-            <img src="img/graphic_2.svg" class="d-block mx-lg-auto img-fluid" alt="alt TODO" width="200" loading="lazy">
-          </div>
-        </div>
-      </div>
 
-      <!--
-      <div class="bg-primary text-secondary px-4 py-5 my-5 text-center">
-        <div class="py-5">
-          <h1 class="display-5 text-white">the team</h1>
-          <div class="col-lg-6 mx-auto">
-            <p class="fs-5 mb-4 text-white">TBC</p>
-            <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
-            </div>
-          </div>
-        </div>
-      </div>-->
+            <!-- PROBLEM -->
+            <section class="container col-xxl-8 px-4 py-5">
+                <div class="row flex-lg-row-reverse align-items-center g-5 py-2">
+                    <div class="d-none d-lg-block col-10 col-sm-8 col-lg-6">
+                        <img src="img/graphic_1.svg" class="d-block mx-lg-auto img-fluid" alt="problem graphic (chart, plotting data quantity against time, with data quantity increasing over time)" width="200"loading="lazy">
+                    </div>
+                    <div class="col-lg-6">
+                        <h1 class="mb-3 text-primary">problem</h1>
+                        <p>Many government open data initiatives such as datos.gob in Spain present usability problems when users and developers want to interpret and reuse the data from their open data portals. Because of these problems, they tend to become “data graveyards”.</p>
+                        <p>When the site stores a large amount of unnecessary & ill-formatted data which is not removed or changed, data homogeneity is affected and these sets become non-compliant with the FAIR (Findable, Accessible, Interoperable and Reusable) digital asset principles. This usually makes navigation hard and discourages users from coming back.</p>
+                    </div>
+                </div>
+            </section>
 
-    </main>
 
-    <!--<script src="js/bootstrap.bundle.min.js"></script>-->
-  </body>
+            <!-- GOALS -->
+            <section class="container col-xxl-8 px-4 py-5">
+                <div class="row flex-lg-row-reverse align-items-center g-5 py-2">
+                    <div class="col-lg-6">
+                        <h1 class="mb-3 text-primary">goals</h1>
+                        <p>We want to encourage the creation of usable open data, validating and cleaning it up, provided by open data sources (mainly datos.gob).</p>
+                        <p>Our second objective is to present this validated data in an easy-to-use way for developers to use, and an easy-to-read way for studying and examining by hand, as well as providing a validation summary that explains how the data was analyzed and where its quality score comes from.</p>
+                    </div>
+                    <div class="d-none d-lg-block col-10 col-sm-8 col-lg-6">
+                        <img src="img/graphic_2.svg" class="d-block mx-lg-auto img-fluid" alt="goals graphic (a document with a pie chart and extra detail about each part of the chart)" width="200" loading="lazy">
+                    </div>
+                </div>
+            </section>
+
+
+            <!-- SOLUTION -->
+            <section class="container col-xxl-8 px-4 py-5">
+                <div class="row flex-lg-row-reverse align-items-center g-5 py-2">
+                    <div class="d-none d-lg-block col-10 col-sm-8 col-lg-6">
+                        <img src="img/graphic_3.svg" class="d-block mx-lg-auto img-fluid" alt="solution graphic (an all-in-one desktop computer showing a pie chart and extra data about it)" width="200"loading="lazy">
+                    </div>
+                    <div class="col-lg-6">
+                        <h1 class="mb-3 text-primary">solution</h1>
+                        <p>We provide a web application to generate a validation summary of the data set chosen by the user. The report shows an overall quality score, as well as a summary about the problems observed as well as detailed information and their specific location.</p>
+                        <p>The results are presented in an intuitive way directly in the web interface, and the user has the option to download the report as a PDF document.</p>
+                    </div>
+                </div>
+            </section>
+
+
+            <!-- SDGs -->
+            <section class="container col-xxl-8 px-4 py-5">
+                <div class="row flex-lg-row-reverse align-items-center g-5 py-2">
+                    <div class="col-lg-6">
+                        <h1 class="mb-3 text-primary">SDGs</h1>
+                        <p>One of the aims of the project is to impact some of the Sustainable Goals on the United Nations’ 2030 schedule.</p>
+                        <p>We focus on the point 8 (economic growth), helping by achieving higher levels of economic productivity through diversification, technological upgrading and innovation, developing technologies on high-value added sectors like Open Data.</p>
+                        <p>Additionally, we are also focused on point 9 (industry innovation and infrastructure), upgrading infrastructure and retrofitting industries to make them sustainable, with increased efficiency on resource usage and greater adoption of clean and environmentally sound technologies and industrial processes.</p>
+                    </div>
+                    <div class="d-none d-lg-block col-10 col-sm-8 col-lg-6">
+                        <img src="img/graphic_2.svg" class="d-block mx-lg-auto img-fluid" alt="goals graphic (a document with a pie chart and extra detail about each part of the chart)" width="200" loading="lazy">
+                    </div>
+                </div>
+            </section>
+
+            <!--
+            <div class="bg-primary text-secondary px-4 py-5 my-5 text-center">
+                <div class="py-5">
+                    <h1 class="display-5 text-white">the team</h1>
+                    <div class="col-lg-6 mx-auto">
+                        <p class="fs-5 mb-4 text-white">TBC</p>
+                        <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+                        </div>
+                    </div>
+                </div>
+            </div>-->
+
+
+            <hr>
+
+
+            <!-- SOLUTION -->
+            <section class="container col-xxl-8 px-4 py-5">
+                <div class="row text-center g-5 py-2">
+                    <p>Koala icon made by <a href="https://www.flaticon.com/authors/ultimatearm" title="ultimatearm">ultimatearm</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a>. Big Data vectors by <a href="https://www.vecteezy.com/vector-art/667510-set-of-black-and-white-thin-line-data-analysis-icons">Kanin Abhiromsawat</a>.<br>Made with &#127817; and &#129382; in oSoc Spain 2021.</p>
+                </div>
+            </section>
+
+        </main>
+
+        <!--<script src="js/bootstrap.bundle.min.js"></script>-->
+    </body>
 </html>
