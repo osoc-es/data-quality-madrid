@@ -3,24 +3,36 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Data Koality</title>
+    <title>data koality - open data validator</title>
 
     <!-- Bootstrap core CSS -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <!-- Custom styles -->
     <link href="css/style.css" rel="stylesheet">
+
+    <!-- Favicon -->
+    <link rel="apple-touch-icon" sizes="180x180" href="img/fav/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="img/fav/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="img/fav/favicon-16x16.png">
+    <link rel="manifest" href="img/fav/site.webmanifest">
   </head>
 
   <body>
     
     <main>
-      <div class="px-4 py-5 my-3 text-center">
-        <img class="d-block mx-auto mb-4" src="LOGO TODO" alt="">
-        <h1 class="display-5 fw-bold">Data Koality</h1>
+
+      <!-- Logo and title -->
+      <div class="px-4 my-5 text-center">
+
+        <!-- Show fixed width image if device is large enough, otherwise show width% version -->
+        <img class="d-lg-none mx-auto" src="img/logo_green.svg" alt="data koality" width="50%">
+        <img class="d-none d-lg-block mx-auto" src="img/logo_green.svg" alt="data koality" width="360em">
+        <!--<h1 class="display-5 fw-bold">Data Koality</h1>-->
         <div class="col-lg-6 mx-auto">
-          <p class="mb-4">Open data validation using Semantic Web technologies</p>
-          <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
-            <button type="button" class="btn btn-primary btn-lg px-4 gap-3">Validate a data set</button>
+          <p class="my-4 fst-italic text-secondary fs-5">Open data validation using Semantic Web technologies</p>
+          <div class="my-5 d-grid gap-4 d-sm-flex justify-content-sm-center align-items-center">
+            <button type="button" class="btn btn-outline-primary btn-lg px-4">Validate a data set</button>
+            <a class="px-4" href="https://github.com/osoc-es/data-quality-madrid">Check the code on GitHub</a>
           </div>
         </div>
       </div>
@@ -30,11 +42,11 @@
 
       <div class="container col-xxl-8 px-4 py-3">
         <div class="row flex-lg-row-reverse align-items-center g-5 py-2">
-          <div class="col-10 col-sm-8 col-lg-6">
-            <img src="img TODO" class="d-block mx-lg-auto img-fluid" alt="alt TODO" width="700" height="500" loading="lazy">
+          <div class="d-none d-lg-block col-10 col-sm-8 col-lg-6">
+            <img src="img/graphic_1.svg" class="d-block mx-lg-auto img-fluid" alt="alt TODO" width="200"loading="lazy">
           </div>
           <div class="col-lg-6">
-            <h1 class="display-5 lh-1 mb-3">problem</h1>
+            <h1 class="display-5 mb-3 text-primary">problem</h1>
             <p>Many government open data initiatives (like datos.gob in Spain) present usability problems when users and developers want to interpret and make use of the data they provide. The quality metrics they usually follow are based on quantity, which creates the issue of the “data graveyards”:
             <ul>
               <li><p>The site stores a large amount of unnecessary & ill-formatted data, since it still computes as “correct” data.</p></li>
@@ -47,26 +59,28 @@
       <div class="container col-xxl-8 px-4 py-3">
         <div class="row flex-lg-row-reverse align-items-center g-5 py-2">
           <div class="col-lg-6">
-            <h1 class="display-5 lh-1 mb-3">objective</h1>
+            <h1 class="display-5 mb-3 text-primary">objective</h1>
             <p>We want to encourage the creation of usable open data, validating and cleaning it up, provided by open data sources (mainly datos.gob).</p>
             <p>The second objective is to present this validated data in an easy-to-use way for developers to use, and an easy-to-read way for reading and analysis by hand, as well as providing a validation summary that explains how the data was analyzed and where its quality score comes from.</p>
           </div>
-          <div class="col-10 col-sm-8 col-lg-6">
-            <img src="img TODO" class="d-block mx-lg-auto img-fluid" alt="alt TODO" width="700" height="500" loading="lazy">
+          <div class="d-none d-lg-block col-10 col-sm-8 col-lg-6">
+            <img src="img/graphic_2.svg" class="d-block mx-lg-auto img-fluid" alt="alt TODO" width="200" loading="lazy">
           </div>
         </div>
       </div>
 
-      <div class="bg-dark text-secondary px-4 py-5 text-center">
+      <!--
+      <div class="bg-primary text-secondary px-4 py-5 my-5 text-center">
         <div class="py-5">
           <h1 class="display-5 text-white">the team</h1>
           <div class="col-lg-6 mx-auto">
-            <p class="fs-5 mb-4">The team</p>
+            <p class="fs-5 mb-4 text-white">TBC</p>
             <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
             </div>
           </div>
         </div>
-      </div>
+      </div>-->
+
     </main>
 
     <!--<script src="js/bootstrap.bundle.min.js"></script>-->
