@@ -47,7 +47,7 @@
                     <div class="col-md-6 mb-4">
                         <label for="i-endpoint" class="form-label">Endpoint URL</label>
                         <div class="input-group">
-                            <input id="i-endpoint" type="url" class="form-control" value="http://datos.gob.es" aria-label="Endpoint URL" aria-describedby="button-addon">
+                            <input id="i-endpoint" type="url" class="form-control" value="http://datos.gob.es/virtuoso/sparql" aria-label="Endpoint URL" aria-describedby="button-addon">
                             <button class="btn btn-outline-secondary" type="button" id="button-addon" onclick="loadEndpoint()">Load</button>
                         </div>
                     </div>
@@ -55,62 +55,54 @@
                     <!-- Title -->
                     <div class="col-md-6 mb-4">
                         <label for="i-title" class="form-label">Title</label>
-                        <input type="text" class="form-control" id="i-title" placeholder="Title">
+                        <input type="text" class="form-control" id="i-title" placeholder="Title" disabled>
                     </div>
 
                     <!-- Theme -->
                     <div class="col-md-6 mb-4">
                         <label for="i-theme" class="form-label">Theme</label>
-                        <select class="form-select" aria-label="Theme" id="i-theme">
-                            <option selected>All/Unspecified</option>
-                            <option value="technology">Technology</option>
-                            <option value="geography">Geography</option>
-                            <option value="transport">Transport</option>
+                        <select class="form-select" aria-label="Theme" id="i-theme" disabled>
+                            <option selected>None</option>
                         </select>
                     </div>
 
                     <!-- Language -->
                     <div class="col-md-6 mb-4">
                         <label for="i-language" class="form-label">Language</label>
-                        <select class="form-select" aria-label="Language" id="i-language">
-                            <option selected>All/Unspecified</option>
-                            <option value="en">EN</option>
-                            <option value="es">ES</option>
-                            <option value="fr">FR</option>
+                        <select class="form-select" aria-label="Language" id="i-language" disabled>
+                            <option selected>None</option>
                         </select>
-                        <!--<input class="form-control" list="languageDatalist" id="i-language" placeholder="Select a language">
-                        <datalist id="languageDatalist">
-                            <option value="All/Unspecified">
-                            <option value="EN">
-                            <option value="ES">
-                            <option value="FR">
-                            <option value="DE">
-                            <option value="CN">
-                        </datalist>-->
                     </div>
 
                     <!-- Publisher -->
                     <div class="col-md-6 mb-4">
                         <label for="i-publisher" class="form-label">Publisher</label>
-                        <select class="form-select" aria-label="Publisher" id="i-publisher">
-                            <option selected>All/Unspecified</option>
-                            <option value="technology">Ayuntamiento de Madrid</option>
-                            <option value="geography">Ministerio de Sanidad</option>
-                            <option value="transport">Ministerio de Consumo</option>
+                        <select class="form-select" aria-label="Publisher" id="i-publisher" disabled>
+                            <option selected>None</option>
                         </select>
                     </div>
+                    <!--<div class="col-md-6 mb-4">
+                        <label for="i-publisher" class="form-label">Publisher</label>
+                        <input class="form-control" list="i-publisherdl" id="i-publisher" placeholder="Search">
+                        <datalist id="i-publisherdl">
+                            <option>All/Unspecified</option>
+                            <option>Ayuntamiento de Madrid</option>
+                            <option>Ministerio de Sanidad</option>
+                            <option>Ministerio de Consumo</option>
+                        </datalist>
+                    </div>-->
 
                     <!-- Keywords -->
                     <div class="col-md-6 mb-4">
                         <label for="i-keywords" class="form-label">Keywords (separated by commas)</label>
-                        <input type="text" class="form-control" id="i-keywords" placeholder="key, words, commas">
+                        <input type="text" class="form-control" id="i-keywords" placeholder="key, words, commas" disabled>
                     </div>
 
                 </div>
 
                 <!-- Buttons (validate and reset) -->
                 <div class="my-4 d-grid gap-4 d-sm-flex justify-content-sm-center align-items-center text-center">
-                    <button type="button" class="btn btn-outline-primary btn-lg px-4" onclick="validate()">Validate</button>
+                    <button type="button" class="btn disabled btn-outline-primary btn-lg px-4" onclick="validate()">Validate</button>
                     <a class="px-4" href="#" onclick="reset()">Reset</a>
                 </div>
             </section>
