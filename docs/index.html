@@ -18,25 +18,25 @@
     </head>
 
     <body>
+
+        <!-- Logo and title -->
+        <header class="px-5 my-5 text-center">
+
+            <!-- Show fixed width image if device is large enough, otherwise show width% version -->
+            <img class="d-sm-none mx-auto" src="img/logo_green.svg" alt="data koality" width="75%">
+            <img class="d-none d-sm-block d-lg-none mx-auto" src="img/logo_green.svg" alt="data koality" width="50%">
+            <img class="d-none d-lg-block mx-auto" src="img/logo_green.svg" alt="data koality" width="360em">
+
+            <div class="col-lg-6 mx-auto">
+                <p class="my-4 fst-italic text-secondary fs-5">Open data validation using Semantic Web technologies.</p>
+                <nav class="my-5 d-grid gap-4 d-sm-flex justify-content-sm-center align-items-center">
+                    <a href="app.html"><button type="button" class="btn btn-outline-primary btn-lg px-4">Validate a data set</button></a>
+                    <a class="px-4" href="https://github.com/osoc-es/data-quality-madrid">Check the code on GitHub</a>
+                </nav>
+            </div>
+        </header>
         
         <main>
-
-            <!-- Logo and title -->
-            <header class="px-5 my-5 text-center">
-
-                <!-- Show fixed width image if device is large enough, otherwise show width% version -->
-                <img class="d-sm-none mx-auto" src="img/logo_green.svg" alt="data koality" width="75%">
-                <img class="d-none d-sm-block d-lg-none mx-auto" src="img/logo_green.svg" alt="data koality" width="50%">
-                <img class="d-none d-lg-block mx-auto" src="img/logo_green.svg" alt="data koality" width="360em">
-
-                <div class="col-lg-6 mx-auto">
-                    <p class="my-4 fst-italic text-secondary fs-5">Open data validation using Semantic Web technologies.</p>
-                    <div class="my-5 d-grid gap-4 d-sm-flex justify-content-sm-center align-items-center">
-                        <button type="button" class="btn btn-outline-primary btn-lg px-4">Validate a data set</button>
-                        <a class="px-4" href="https://github.com/osoc-es/data-quality-madrid">Check the code on GitHub</a>
-                    </div>
-                </div>
-            </header>
 
 
             <hr class="my-5">
@@ -104,7 +104,7 @@
 
             
             <!-- TEAM -->
-            <div class="bg-secondary text-secondary px-4 py-5 my-5 text-center">
+            <section class="bg-secondary text-secondary px-4 py-5 my-5 text-center">
                 <div class="py-5">
                     <h1 class="display-5 text-warning">the team</h1>
                     <div class="col-lg-6 mx-auto">
@@ -112,21 +112,17 @@
                         <!--<div class="d-grid gap-2 d-sm-flex justify-content-sm-center"></div>-->
                     </div>
                 </div>
-            </div>
-
-
-            <hr>
-
-
-            <!-- Footer -->
-            <section class="container col-xxl-8 px-4 py-5">
-                <div class="row text-center g-5 py-2">
-                    <p>Koala icon made by <a href="https://www.flaticon.com/authors/ultimatearm" title="ultimatearm">ultimatearm</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a>. Big Data vectors by <a href="https://www.vecteezy.com/vector-art/667510-set-of-black-and-white-thin-line-data-analysis-icons">Kanin Abhiromsawat</a>.<br>Made with &#127817; and &#129382; in <a href="https://2021.summerofcode.es/">oSoc Spain 2021</a>.</p>
-                </div>
             </section>
 
+
+            <!--<hr>-->
         </main>
 
-        <!--<script src="js/bootstrap.bundle.min.js"></script>-->
+        <!-- Footer -->
+        <footer class="container col-xxl-8 px-4 py-5">
+            <div class="row text-center g-5 py-2">
+                <p>Koala icon made by <a href="https://www.flaticon.com/authors/ultimatearm" title="ultimatearm">ultimatearm</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a>. Big Data vectors by <a href="https://www.vecteezy.com/vector-art/667510-set-of-black-and-white-thin-line-data-analysis-icons">Kanin Abhiromsawat</a>.<br>Made with &#127817; and &#129382; in <a href="https://2021.summerofcode.es/">oSoc Spain 2021</a>.</p>
+            </div>
+        </footer>
     </body>
 </html>
