@@ -17,18 +17,16 @@
         <link rel="manifest" href="img/fav/site.webmanifest">
     </head>
 
-    <body>
-        
+
+    <body>   
         <!-- Logo and title -->
         <header class="px-5 my-5 text-center">
-
             <!-- Show fixed width image if device is large enough, otherwise show width% version -->
             <a href="index.html" alt="data koality home page">
                 <img class="d-sm-none mx-auto" src="img/logo_green.svg" alt="data koality" width="75%">
                 <img class="d-none d-sm-block d-lg-none mx-auto" src="img/logo_green.svg" alt="data koality" width="50%">
                 <img class="d-none d-lg-block mx-auto" src="img/logo_green.svg" alt="data koality" width="360em">
             </a>
-
             <div class="col-lg-6 mx-auto">
                 <p class="my-4 fst-italic text-secondary fs-5">Open data validation using Semantic Web technologies.</p>
             </div>
@@ -48,7 +46,10 @@
                     <!-- Endpoint -->
                     <div class="col-md-6 mb-4">
                         <label for="i-endpoint" class="form-label">Endpoint URL</label>
-                        <input type="url" class="form-control" id="i-endpoint" placeholder="http://datos.gob.es">
+                        <div class="input-group">
+                            <input id="i-endpoint" type="url" class="form-control" value="http://datos.gob.es" aria-label="Endpoint URL" aria-describedby="button-addon">
+                            <button class="btn btn-outline-secondary" type="button" id="button-addon" onclick="loadEndpoint()">Load</button>
+                        </div>
                     </div>
 
                     <!-- Title -->
@@ -108,14 +109,38 @@
                 </div>
 
                 <!-- Buttons (validate and reset) -->
-                <div class="my-5 d-grid gap-4 d-sm-flex justify-content-sm-center align-items-center text-center">
-                    <button type="button" class="btn btn-outline-primary btn-lg px-4">Validate</button>
-                    <a class="px-4" href="#">Reset</a>
+                <div class="my-4 d-grid gap-4 d-sm-flex justify-content-sm-center align-items-center text-center">
+                    <button type="button" class="btn btn-outline-primary btn-lg px-4" onclick="validate()">Validate</button>
+                    <a class="px-4" href="#" onclick="reset()">Reset</a>
                 </div>
             </section>
 
 
-            <hr>
+            <hr class="my-5">
+
+
+            <section class="container col-xxl-8 px-4 py-4">
+                
+                <h1 class="text-primary mb-5">general analysis</h1>
+
+                <!-- Progress bar -->
+                <div class="progress mb-5">
+                    <div id="r-quality-factor" class="progress-bar" role="progressbar" style="width: 57%;" aria-valuenow="57" aria-valuemin="0" aria-valuemax="100"><h4>quality: 57%</h4></div>
+                </div>
+
+                <h2 class="text-primary mb-4">observations</h2>
+
+                <div class="mb-5">
+                    <span class="row p-2 m-2 border rounded border-success">No commas present in line 16</span>
+                    <span class="row p-2 m-2 border rounded border-success">Invalid characters in lines 35, 36, 37</span>
+                </div>
+
+                <h1 class="text-primary mb-5">detailed analysis</h1>
+
+            </section>
+
+
+            <hr class="my-5">
 
 
             <!-- Footer -->
@@ -124,6 +149,8 @@
                     <p>Koala icon made by <a href="https://www.flaticon.com/authors/ultimatearm" title="ultimatearm">ultimatearm</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a>.<br>Made with &#127817; and &#129382; in <a href="https://2021.summerofcode.es/">oSoc Spain 2021</a>.</p>
                 </div>
             </section>
+
+            <script type="text/javascript" src="js/validator.js"></script>
 
         </main>
     </body>
