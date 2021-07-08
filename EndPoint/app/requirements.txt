@@ -1,0 +1,6 @@
+sparqlwrapper
+rdflib
+fastapi
+jupyter
+aiofiles
+uvicorn
