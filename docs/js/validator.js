@@ -137,12 +137,23 @@ function applyFilters() {
             
             // Parse the response string into an object
             let response = JSON.parse(req.response);
-            console.log(response);
-            // ...
+            titles = response["results"];
+            // Set the titles (TODO change to a search thing)
+            let t = document.getElementById("i-title");
+            t.innerHTML = "<option value=-1>Unspecified</option>";
+            for (i in titles) {
+                let e = document.createElement("option");
+                e.innerText = titles[i]["title"];
+                e.value = i;
+                t.append(e);
+            }
+            document.getElementById("i-title").disabled = false;
+            document.getElementById("b-validate").classList.remove("disabled");
+            // ... TODO search
         }
     }
 
-    req.open("POST", BACKEND_URL + "validateInput", true);
+    req.open("POST", BACKEND_URL + "getDatasets", true);
     // We are sending a JSON object so set the header
     req.setRequestHeader('Content-Type', 'application/json');
     req.send(JSON.stringify(obj));
@@ -166,7 +177,7 @@ function reset() {
     document.getElementById("i-title").disabled = true;
     // Disable buttons
     document.getElementById("b-apply").classList.add("disabled");
-    document.getElementById("b-apply").classList.add("disabled");
+    document.getElementById("b-validate").classList.add("disabled");
 
     themes = [];
     publishers = [];

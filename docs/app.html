@@ -49,7 +49,7 @@
                         <label for="i-dataset" class="form-label">Dataset URL</label>
                         <div class="input-group">
                             <input id="i-dataset" type="url" class="form-control" placeholder="https://data.set/url" aria-label="Dataset URL" aria-describedby="button-addon">
-                            <button class="btn btn-outline-secondary" type="button" id="button-addon" onclick="validate('direct')">Validate</button>
+                            <button class="btn btn-outline-secondary" type="button" id="b-validatedirect" onclick="validate('direct')">Validate</button>
                         </div>
                     </div>
 
@@ -127,8 +127,8 @@
                             <select class="form-select" aria-label="Title" id="i-title" disabled>
                                 <option selected>None</option>
                             </select>
-                            <button class="btn disabled btn-outline-secondary" type="button" id="button-addon" onclick="validate('direct')">Validate</button>
-                            <button class="btn btn-outline-primary" type="button" id="button-addon" onclick="reset()">Reset</button>
+                            <button class="btn disabled btn-outline-secondary" type="button" id="b-validate" onclick="validate('direct')">Validate</button>
+                            <button class="btn btn-outline-primary" type="button" id="b-reset" onclick="reset()">Reset</button>
                         </div>
                     </div>
                 </div>
