@@ -2,6 +2,7 @@ from SPARQLWrapper import SPARQLWrapper, JSON
 from rdflib import Graph
 import json
 from string import Template
+import time
 
 def runQuery(endpoint:str,query:str):
     sparql = SPARQLWrapper(endpoint)
@@ -15,7 +16,7 @@ def runQuery(endpoint:str,query:str):
 
 
 def getTematicas(endpoint:str = "https://datos.gob.es/virtuoso/sparql"):
-    
+    start = time.time()
     query = """
         PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
         PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
@@ -29,9 +30,11 @@ def getTematicas(endpoint:str = "https://datos.gob.es/virtuoso/sparql"):
     """
     
     results = runQuery(endpoint,query)["results"]["bindings"]
+    end = time.time()
+    print(f"getTematicas >> TIME ELAPSE QUERY : {end - start}")
 
     #print(results["results"]["bindings"])
-
+    start = time.time()
     filtered = []
     for i in results:
         filtered.append(
@@ -41,11 +44,12 @@ def getTematicas(endpoint:str = "https://datos.gob.es/virtuoso/sparql"):
             }
         )
     
-
+    end = time.time()
+    print(f"getTematicas >> TIME ELAPSE FORMATTING : {end - start}")
     return filtered
 
 def getPublicadores(endpoint:str = "https://datos.gob.es/virtuoso/sparql"):
-    
+    start = time.time()
     query = """
         PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
         PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
@@ -58,7 +62,10 @@ def getPublicadores(endpoint:str = "https://datos.gob.es/virtuoso/sparql"):
         }
     """
     results = runQuery(endpoint,query)["results"]["bindings"]
-    
+    end = time.time()
+    print(f"getPublicadores >> TIME ELAPSE QUERY : {end - start}")
+
+    start = time.time()
     filtered = []
     for i in results:
         filtered.append(
@@ -68,10 +75,13 @@ def getPublicadores(endpoint:str = "https://datos.gob.es/virtuoso/sparql"):
             }
         )
     
+    end = time.time()
+    print(f"getPublicadores >> TIME ELAPSE FORMATTING : {end - start}")
 
     return filtered
 
 def getDatasetInfo(organismo,sector,endpoint:str = "https://datos.gob.es/virtuoso/sparql"):
+    start = time.time()
     sparql = SPARQLWrapper(endpoint)
     query = Template("""
     PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
@@ -108,7 +118,6 @@ def getDatasetInfo(organismo,sector,endpoint:str = "https://datos.gob.es/virtuos
     FILTER  (regex(?publisherURI,"$ORGANISMO","i")) # Filtro Organismo     
     FILTER (regex(?format_value,"text/csv","i")) # Tiene que ser CSV
     }
-    LIMIT 50
     """)
 
     sparql.setQuery(query.substitute(SECTOR=sector,ORGANISMO=organismo))
@@ -116,9 +125,11 @@ def getDatasetInfo(organismo,sector,endpoint:str = "https://datos.gob.es/virtuos
     sparql.setReturnFormat(JSON)
     results = sparql.query().convert()["results"]["bindings"]
 
+    end = time.time()
+    print(f"getDatasetInfo >> TIME ELAPSE QUERY : {end - start}")
 
     #results = runQuery(endpoint,query)["results"]["bindings"]
-    
+    start = time.time()
     filtered = []
     for i in results:
         filtered.append(
@@ -135,5 +146,7 @@ def getDatasetInfo(organismo,sector,endpoint:str = "https://datos.gob.es/virtuos
             }
         )
      
+    end = time.time()
+    print(f"getDatasetInfo >> TIME ELAPSE FORMATTING : {end - start}")
 
     return filtered
