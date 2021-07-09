@@ -118,6 +118,7 @@ def getDatasetInfo(organismo,sector,endpoint:str = "https://datos.gob.es/virtuos
     FILTER  (regex(?publisherURI,"$ORGANISMO","i")) # Filtro Organismo     
     FILTER (regex(?format_value,"text/csv","i")) # Tiene que ser CSV
     }
+    LIMIT 500
     """)
 
     sparql.setQuery(query.substitute(SECTOR=sector,ORGANISMO=organismo))
