@@ -41,8 +41,8 @@
             <!-- FORM -->
             <section class="container col-xxl-8 px-4 py-4">
 
-                <h1 class="text-primary mb-4">option 1: validate a data set</h1>
-                <div class="row my-5">
+                <h1 class="text-primary mb-4"><a href="#i-dataset" onclick="select('s-option1')">option 1: validate a data set</a></h1>
+                <div id="s-option1" class="row my-5 visually-hidden">
                     
                     <!-- Dataset -->
                     <div class="col-md-12 mb-4">
@@ -55,8 +55,8 @@
 
                 </div>
 
-                <h1 class="text-primary mb-4">option 2: search for a data set</h1>
-                <div class="row">
+                <h1 class="text-primary mb-4"><a href="#i-endpoint" onclick="select('s-option2')">option 2: search for a data set</a></h1>
+                <div id="s-option2" class="row my-5 visually-hidden">
 
                     <h3 class="text-primary mb-4">step 1: load endpoint</h3>
                     
@@ -68,11 +68,6 @@
                             <button class="btn btn-outline-primary" type="button" id="button-addon" onclick="loadEndpoint()">Load</button>
                         </div>
                     </div>
-
-                </div>
-
-
-                <div class="row">
 
                     <h3 class="text-primary mb-4">step 2: apply filters</h3>
 
@@ -123,15 +118,10 @@
                         <button id="b-apply" type="button" class="btn disabled btn-outline-primary btn-lg px-4" onclick="applyFilters()">Apply</button>
                     </div>-->
 
-                </div>
-
-
-                <div class="row">
-
                     <h3 class="text-primary mb-4">step 3: select data set</h3>
 
                     <!-- Title -->
-                    <div class="col-md-12 mb-4">
+                    <div class="col-md-12">
                         <label for="i-title" class="form-label">Title</label>
                         <div class="input-group">
                             <select class="form-select" aria-label="Title" id="i-title" disabled>
@@ -148,7 +138,7 @@
             <hr class="my-5">
 
 
-            <section class="container col-xxl-8 px-4 py-4">
+            <section class="container col-xxl-8 px-4 py-4 visually-hidden">
                 
                 <h1 class="text-primary mb-5">general analysis</h1>
 
@@ -173,7 +163,7 @@
             </section>
 
 
-            <hr class="my-5">
+            <hr class="my-5 visually-hidden">
 
 
             <!-- Footer -->

@@ -5,6 +5,17 @@ var publishers = [];
 //var adminLevels = [];
 
 
+let selectable = ["s-option1", "s-option2"];
+function select(elem) {
+    // First hide all elements
+    for (i in selectable) {
+        document.getElementById(selectable[i]).classList.add("visually-hidden");
+    }
+    // Then unhide the one we selected
+    document.getElementById(elem).classList.remove("visually-hidden");
+}
+
+
 function sortAlphabetically(a, b) {
     if (a["name"] > b["name"]) return 1;
     else if (a["name"] == b["name"]) return 0;
