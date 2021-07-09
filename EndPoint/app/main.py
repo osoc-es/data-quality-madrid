@@ -1,11 +1,23 @@
 from fastapi import FastAPI
 from fastapi.responses import FileResponse
-from pydantic import BaseModel
-from RDF.funciones import getTematicas,getPublicadores
-from random import randint
+from RDF.funciones import getTematicas,getPublicadores,getDatasetInfo
+from random import choice
+import os
+from Model.InputFilters import InputFilters
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 
+origins = [
+    "*"
+]
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.get("/")
 def helloWorld():
@@ -17,14 +29,15 @@ def getSmth(name:str):
 
 @app.get("/daShrek")
 def shrek():
-    return FileResponse(f"Shreks/shrek{randint(0,4)}.jpg")
+    res = choice(os.listdir("Shreks"))
+    return FileResponse(f"Shreks/{res}")
 
 @app.get("/breathtaking")
 def breathtaking():
     return FileResponse(f"theKeanu.png")
 
 @app.post('/tematicas')
-async def tematicas(endpoint:str = "https://datos.gob.es/virtuoso/sparql",):
+async def tematicas(endpoint:str = "https://datos.gob.es/virtuoso/sparql"):
     '''
     Devuelve tematicas de la forma
     {
@@ -36,7 +49,7 @@ async def tematicas(endpoint:str = "https://datos.gob.es/virtuoso/sparql",):
     return getTematicas(endpoint)
 
 @app.post('/organismos')
-async def organismos(endpoint:str = "https://datos.gob.es/virtuoso/sparql",):
+async def organismos(endpoint:str = "https://datos.gob.es/virtuoso/sparql"):
     '''
     Devuelve organismos de la forma
     {
@@ -48,7 +61,7 @@ async def organismos(endpoint:str = "https://datos.gob.es/virtuoso/sparql",):
     return getPublicadores(endpoint)
 
 @app.post('/themePublisher')
-async def theme_publisher(endpoint:str = "https://datos.gob.es/virtuoso/sparql",):
+async def theme_publisher(endpoint:str = "https://datos.gob.es/virtuoso/sparql"):
     '''
     Devuelve tematicas y organismos de la forma
     {
@@ -75,5 +88,12 @@ async def theme_publisher(endpoint:str = "https://datos.gob.es/virtuoso/sparql",
 
     return result
 
+@app.post("/validateInput")
+async def validateInput(inputfilters:InputFilters):
+    organismo = inputfilters.publisher if inputfilters.publisher != "All/Unspecified" else "/Organismo/"
+    sector = inputfilters.theme if inputfilters.theme != "All/Unspecified" else "/sector/"
+
+    print(f"validateInput >> Sector:{sector} \tOrganismo: {organismo}")
+    return {"results":getDatasetInfo(organismo,sector,endpoint=inputfilters.endpoint)}
 
 
