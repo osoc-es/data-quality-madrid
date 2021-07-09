@@ -1,23 +1,15 @@
-// == DOM stuff ==
-
-/* - Input fields -
- . i-endpoint:  URL
- . i-title:     text
- . i-theme:     select, text
- . i-language:  select, text
- . i-publisher: select, text
- . i-keywords:  text (several values separated by commas)
-
-
-   - Output fields -
-          TBD
-*/
-
 const BACKEND_URL = "https://dataquality.herokuapp.com/";
 // Storage
 var themes = [];
 var publishers = [];
-var languages = [];
+//var adminLevels = [];
+
+
+function sortAlphabetically(a, b) {
+    if (a["name"] > b["name"]) return 1;
+    else if (a["name"] == b["name"]) return 0;
+    else return -1;
+}
 
 
 function showError(message) {
@@ -48,15 +40,15 @@ function loadEndpoint() {
             
             // Parse the response string into an object
             let response = JSON.parse(req.response);
-            // Store themes and publishers
+            // Store stuff
             themes = response["themes"];
             publishers = response["publisher"];
+            //adminLevels = response["adminLevel"];
+
             // Sort publishers by name
-            publishers.sort((a, b) => {
-                if (a["name"] > b["name"]) return 1;
-                else if (a["name"] == b["name"]) return 0;
-                else return -1;
-            })
+            publishers.sort(sortAlphabetically);
+            // Sort admin levels by name
+            //adminLevels.sort(sortAlphabetically);
 
             // Set the themes
             let t = document.getElementById("i-theme");
@@ -85,12 +77,23 @@ function loadEndpoint() {
             }
             p.disabled = false;*/
 
+            // Set the administration levels
+            /*let a = document.getElementById("i-level");
+            a.innerHTML = "<option>All/Unspecified</option>";
+            for (i in adminLevels) {
+                let e = document.createElement("option");
+                e.innerText = publishers[i]["name"];
+                a.append(e);
+            }*/
+            
+
             // If there were no errors (didn't return before), enable more fields
-            document.getElementById("i-title").disabled = false;
             document.getElementById("i-theme").disabled = false;
-            document.getElementById("i-language").disabled = false;
             document.getElementById("i-publisher").disabled = false;
+            //document.getElementById("i-level").disabled = false;
             document.getElementById("i-keywords").disabled = false;
+            // And enable "apply filters" button
+            document.getElementById("b-apply").classList.remove("disabled");
         }
     }
 
@@ -100,21 +103,28 @@ function loadEndpoint() {
 }
 
 
+function applyFilters() {
+
+}
+
+
 function reset() {
-    document.getElementById("i-title").disabled = true;
+    // Disable input fields
     document.getElementById("i-theme").disabled = true;
-    document.getElementById("i-language").disabled = true;
     document.getElementById("i-publisher").disabled = true;
+    //document.getElementById("i-level").disabled = true;
     document.getElementById("i-keywords").disabled = true;
+    document.getElementById("i-title").disabled = true;
+    // Disable buttons
+    document.getElementById("b-apply").classList.add("disabled");
+    document.getElementById("b-apply").classList.add("disabled");
 
     themes = [];
     publishers = [];
-    languages = [];
+    //adminLevels = [];
 
     document.getElementById("i-theme").innerHTML = "<option>None</option>";
-    document.getElementById("i-language").innerHTML = "<option>None</option>";
     document.getElementById("i-publisher").innerHTML = "<option>None</option>";
+    //document.getElementById("i-level").innerHTML = "<option>None</option>";
     document.getElementById("i-keywords").value = "";
-
-    // TODO other things (replace values in each field)
 }
