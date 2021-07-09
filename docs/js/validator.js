@@ -17,11 +17,6 @@ function showError(message) {
 }
 
 
-function validate() {
-    showError("Validate button was clicked");
-}
-
-
 function loadEndpoint() {
     showError("Load button was clicked");
 
@@ -104,7 +99,19 @@ function loadEndpoint() {
 
 
 function applyFilters() {
+    // Send:
+    //  - theme: text or 'All/Unspecified'
+    //  - publisher: text or 'All/Unspecified'
+    //  - keywords: list of words, or empty list
+}
 
+
+function validate(type) {
+    if (type == 'form') {
+        showError("Validating using form data");
+    } else {
+        showError("Validating using direct URL")
+    }
 }
 
 
