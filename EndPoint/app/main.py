@@ -88,12 +88,15 @@ async def theme_publisher(endpoint:str = "https://datos.gob.es/virtuoso/sparql")
 
     return result
 
-@app.post("/validateInput")
-async def validateInput(inputfilters:InputFilters):
+@app.post("/getDatasets")
+async def getDatasets(inputfilters:InputFilters):
     organismo = inputfilters.publisher if inputfilters.publisher != "All/Unspecified" else "/Organismo/"
     sector = inputfilters.theme if inputfilters.theme != "All/Unspecified" else "/sector/"
-
-    print(f"validateInput >> Sector:{sector} \tOrganismo: {organismo}")
+    print(f"getDatasets >> Sector:{sector} \tOrganismo: {organismo}")
     return {"results":getDatasetInfo(organismo,sector,endpoint=inputfilters.endpoint)}
 
+
+@app.post("/validateDataset")
+async def validateDataset(datasetLink:str):
+    return datasetLink
 
