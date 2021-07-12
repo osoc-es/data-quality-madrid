@@ -6,6 +6,8 @@ var titles = [];
 var titleResults = [];
 var genericTitle = document.getElementById("generic-title").cloneNode(true);
 genericTitle.classList.remove("visually-hidden");
+var issueEnabled = true;
+var modificationEnabled = true;
 
 
 
@@ -144,13 +146,27 @@ function applyFilters() {
             titles = response["results"];
             console.log(titles);
             // Now the user can search their stuff
-            // TODO set some default values to the search fields
+            
+            // Set the language list
+            let langs = [];
+            for (i in titles) if (!langs.includes(titles[i]["lang"])) langs.push(titles[i]["lang"]);
+            let l = document.getElementById("i-language");
+            l.innerHTML = "<option>All</option>";
+            for (i in langs) {
+                let e = document.createElement("option");
+                e.innerText = langs[i];
+                //e.value = i;
+                l.append(e);
+            }
 
             // Enable fields
             document.getElementById("i-title").disabled = false;
             document.getElementById("i-language").disabled = false;
             document.getElementById("i-issue").disabled = false;
             document.getElementById("i-modification").disabled = false;
+
+            // Show titles
+            searchTitles();
         }
     }
 
@@ -171,6 +187,55 @@ function searchTitles() {
     console.log(language);
     console.log(issue);
     console.log(modification);
+
+    // Start with all titles
+    titleResults = titles.slice();
+
+    // Remove all elements that do not fit any of the filters
+    for (i in titleResults) {
+        
+        // Check whether the title is contained in the dataset title
+        if (title != "" && !titleResults[i]["title"].includes(title)) {
+            console.log("Removed " + titleResults[i]["title"] + ": it does not contain '" + title + "'");
+            titleResults.splice(i, 1);
+            continue;
+        }
+        
+        // Check whether the language matches
+        if (language != "All" && titleResults[i]["lang"] != language) {
+            console.log("Removed " + titleResults[i]["title"] + ": its language (" + titleResults[i]["lang"] + ") is not " + language);
+            titleResults.splice(i, 1);
+            continue;
+        }
+
+        // Check whether issue date is enabled and matches
+        let date = new Date(titleResults[i]["issued"]);
+        if (issueEnabled && date.getFullYear() != issue) {
+            console.log("Removed " + titleResults[i]["title"] + ": its issue date is " + date.getFullYear() + " instead of " + issue);
+            titleResults.splice(i, 1);
+            continue;
+        }
+
+        // Check whether modification date is enabled and matches
+        date = new Date(titleResults[i]["modified"]);
+        if (modificationEnabled && date.getFullYear() != modification) {
+            console.log("Removed " + titleResults[i]["title"] + ": its modification date is " + date.getFullYear() + " instead of " + modification);
+            titleResults.splice(i, 1);
+            continue;
+        }
+    }
+}
+
+
+function toggleIssue() {
+    issueEnabled = !issueEnabled;
+    document.getElementById("b-toggle-issue").innerText = issueEnabled ? "On" : "Off";
+}
+
+
+function toggleModification() {
+    modificationEnabled = !modificationEnabled;
+    document.getElementById("b-toggle-modification").innerText = modificationEnabled ? "On" : "Off";
 }
 
 
@@ -201,7 +266,7 @@ function reset() {
     document.getElementById("i-publisher").innerHTML = "<option>None</option>";
     document.getElementById("i-keywords").value = "";
     document.getElementById("i-title").value = "";
-    document.getElementById("i-language").value = "None";
+    document.getElementById("i-language").value = "All";
     document.getElementById("i-issue").value = 2021;
     document.getElementById("i-modification").value = 2021;
 

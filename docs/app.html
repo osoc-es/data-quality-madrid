@@ -105,13 +105,13 @@
                     <!-- Title -->
                     <div class="col-md-6 mb-4">
                         <label for="i-title" class="form-label">Title</label>
-                        <input type="text" class="form-control" id="i-title" placeholder="Title words" disabled>
+                        <input type="text" onchange="searchTitles()" class="form-control" id="i-title" placeholder="Title words" disabled>
                     </div>
 
                     <!-- Language -->
                     <div class="col-md-6 mb-4">
                         <label for="i-language" class="form-label">Language</label>
-                        <select class="form-select" aria-label="Language" id="i-language" disabled>
+                        <select class="form-select" onchange="searchTitles()" aria-label="Language" id="i-language" disabled>
                             <option selected>None</option>
                         </select>
                     </div>
@@ -119,13 +119,19 @@
                     <!-- Issue date -->
                     <div class="col-md-6 mb-4">
                         <label for="i-issue" class="form-label">Issue year</label>
-                        <input type="number" class="form-control" id="i-issue" min="1970" max="2050" value="2021" disabled>
+                        <div class="input-group">
+                            <input type="number" onchange="searchTitles()" class="form-control" id="i-issue" min="1970" max="2050" value="2021" disabled>
+                            <button class="btn btn-outline-secondary" type="button" id="b-toggle-issue" onclick="toggleIssue(); searchTitles()">On</button>
+                        </div>
                     </div>
 
                     <!-- Modification date -->
                     <div class="col-md-6 mb-4">
                         <label for="i-modification" class="form-label">Modification year</label>
-                        <input type="number" class="form-control" id="i-modification" min="1970" max="2050" value="2021" disabled>
+                        <div class="input-group">
+                            <input type="number" onchange="searchTitles()" class="form-control" id="i-modification" min="1970" max="2050" value="2021" disabled>
+                            <button class="btn btn-outline-secondary" type="button" id="b-toggle-modification" onclick="toggleModification(); searchTitles()">On</button>
+                        </div>
                     </div>
 
 
