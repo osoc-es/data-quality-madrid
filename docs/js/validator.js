@@ -3,6 +3,10 @@ const BACKEND_URL = "https://dataquality.herokuapp.com/";
 var themes = [];
 var publishers = [];
 var titles = [];
+var titleResults = [];
+var genericTitle = document.getElementById("generic-title").cloneNode(true);
+genericTitle.classList.remove("visually-hidden");
+
 
 
 let selectable = ["s-option1", "s-option2"];
@@ -138,18 +142,15 @@ function applyFilters() {
             // Parse the response string into an object
             let response = JSON.parse(req.response);
             titles = response["results"];
-            // Set the titles (TODO change to a search thing)
-            let t = document.getElementById("i-title");
-            t.innerHTML = "<option value=-1>Unspecified</option>";
-            for (i in titles) {
-                let e = document.createElement("option");
-                e.innerText = titles[i]["title"];
-                e.value = i;
-                t.append(e);
-            }
+            console.log(titles);
+            // Now the user can search their stuff
+            // TODO set some default values to the search fields
+
+            // Enable fields
             document.getElementById("i-title").disabled = false;
-            document.getElementById("b-validate").classList.remove("disabled");
-            // ... TODO search
+            document.getElementById("i-language").disabled = false;
+            document.getElementById("i-issue").disabled = false;
+            document.getElementById("i-modification").disabled = false;
         }
     }
 
@@ -160,11 +161,24 @@ function applyFilters() {
 }
 
 
+function searchTitles() {
+    // First retrieve search filters
+    let title = document.getElementById("i-title").value;
+    let language = document.getElementById("i-language").value;
+    let issue = document.getElementById("i-issue").value;
+    let modification = document.getElementById("i-modification").value;
+    console.log(title);
+    console.log(language);
+    console.log(issue);
+    console.log(modification);
+}
+
+
 function validate(type) {
     if (type == 'form') {
         showError("Validating using form data");
     } else {
-        showError("Validating using direct URL")
+        showError("Validating using direct URL for element " + type);
     }
 }
 
@@ -175,15 +189,28 @@ function reset() {
     document.getElementById("i-publisher").disabled = true;
     document.getElementById("i-keywords").disabled = true;
     document.getElementById("i-title").disabled = true;
+    document.getElementById("i-language").disabled = true;
+    document.getElementById("i-issue").disabled = true;
+    document.getElementById("i-modification").disabled = true;
+
     // Disable buttons
     document.getElementById("b-apply").classList.add("disabled");
-    document.getElementById("b-validate").classList.add("disabled");
 
+    // Reset input field values
+    document.getElementById("i-theme").innerHTML = "<option>None</option>";
+    document.getElementById("i-publisher").innerHTML = "<option>None</option>";
+    document.getElementById("i-keywords").value = "";
+    document.getElementById("i-title").value = "";
+    document.getElementById("i-language").value = "None";
+    document.getElementById("i-issue").value = 2021;
+    document.getElementById("i-modification").value = 2021;
+
+    // Free storage
     themes = [];
     publishers = [];
     titles = [];
 
-    document.getElementById("i-theme").innerHTML = "<option>None</option>";
-    document.getElementById("i-publisher").innerHTML = "<option>None</option>";
-    document.getElementById("i-keywords").value = "";
+    // Reset title results
+    document.getElementById("s-title-results").innerHTML = "";
+    //document.getElementById("s-title-results").appendChild(genericTitle.cloneNode(true));
 }
