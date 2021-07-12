@@ -6,8 +6,8 @@ var titles = [];
 var titleResults = [];
 var genericTitle = document.getElementById("generic-title").cloneNode(true);
 genericTitle.classList.remove("visually-hidden");
-var issueEnabled = true;
-var modificationEnabled = true;
+var issueEnabled = false;
+var modificationEnabled = false;
 
 
 
@@ -22,9 +22,16 @@ function select(elem) {
 }
 
 
-function sortAlphabetically(a, b) {
+function sortByName(a, b) {
     if (a["name"] > b["name"]) return 1;
     else if (a["name"] == b["name"]) return 0;
+    else return -1;
+}
+
+
+function sortByTitle(a, b) {
+    if (a["title"] > b["title"]) return 1;
+    else if (a["title"] == b["title"]) return 0;
     else return -1;
 }
 
@@ -57,7 +64,7 @@ function loadEndpoint() {
             publishers = response["publisher"];
 
             // Sort publishers by name
-            publishers.sort(sortAlphabetically);
+            publishers.sort(sortByName);
 
             // Set the themes
             let t = document.getElementById("i-theme");
@@ -78,15 +85,6 @@ function loadEndpoint() {
                 e.value = i;
                 p.append(e);
             }
-            /*let p = document.getElementById("i-publisherdl");
-            p.disabled = true;
-            p.innerHTML = "<option>All/Unspecified</option>";
-            for (i in publishers) {
-                let e = document.createElement("option");
-                e.innerText = publishers[i]["name"];
-                p.append(e);
-            }
-            p.disabled = false;*/
 
             // If there were no errors (didn't return before), enable more fields
             document.getElementById("i-theme").disabled = false;
@@ -144,7 +142,7 @@ function applyFilters() {
             // Parse the response string into an object
             let response = JSON.parse(req.response);
             titles = response["results"];
-            console.log(titles);
+
             // Now the user can search their stuff
             
             // Set the language list
@@ -183,46 +181,58 @@ function searchTitles() {
     let language = document.getElementById("i-language").value;
     let issue = document.getElementById("i-issue").value;
     let modification = document.getElementById("i-modification").value;
-    console.log(title);
-    console.log(language);
-    console.log(issue);
-    console.log(modification);
 
-    // Start with all titles
-    titleResults = titles.slice();
+    // Start with no datasets and copy the ones that satisfy the conditions
+    titleResults = [];
 
     // Remove all elements that do not fit any of the filters
-    for (i in titleResults) {
+    for (i in titles) {
         
+        //console.log("Checking " + i + " (" + titles[i]["title"] + ")");
+        let idate = new Date(titles[i]["issued"]);
+        let mdate = new Date(titles[i]["modified"]);
+
         // Check whether the title is contained in the dataset title
-        if (title != "" && !titleResults[i]["title"].includes(title)) {
-            console.log("Removed " + titleResults[i]["title"] + ": it does not contain '" + title + "'");
-            titleResults.splice(i, 1);
+        if (title != "" && !titles[i]["title"].includes(title)) {
+            //console.log("Not copied " + titles[i]["title"] + ": it does not contain '" + title + "'");
             continue;
-        }
         
         // Check whether the language matches
-        if (language != "All" && titleResults[i]["lang"] != language) {
-            console.log("Removed " + titleResults[i]["title"] + ": its language (" + titleResults[i]["lang"] + ") is not " + language);
-            titleResults.splice(i, 1);
+        } else if (language != "All" && titles[i]["lang"] != language) {
+            //console.log("Not copied " + titles[i]["title"] + ": its language (" + titles[i]["lang"] + ") is not " + language);
             continue;
-        }
-
+        
         // Check whether issue date is enabled and matches
-        let date = new Date(titleResults[i]["issued"]);
-        if (issueEnabled && date.getFullYear() != issue) {
-            console.log("Removed " + titleResults[i]["title"] + ": its issue date is " + date.getFullYear() + " instead of " + issue);
-            titleResults.splice(i, 1);
+        } else if (issueEnabled && idate.getFullYear() != issue) {
+            //console.log("Not copied " + titles[i]["title"] + ": its issue date is " + idate.getFullYear() + " instead of " + issue);
             continue;
-        }
-
+        
         // Check whether modification date is enabled and matches
-        date = new Date(titleResults[i]["modified"]);
-        if (modificationEnabled && date.getFullYear() != modification) {
-            console.log("Removed " + titleResults[i]["title"] + ": its modification date is " + date.getFullYear() + " instead of " + modification);
-            titleResults.splice(i, 1);
+        } else if (modificationEnabled && mdate.getFullYear() != modification) {
+            //console.log("Not copied " + titles[i]["title"] + ": its modification date is " + mdate.getFullYear() + " instead of " + modification);
             continue;
+
+        // If it satisfies everything, copy it
+        } else {
+            titleResults.push(titles[i]);
         }
+    }
+
+    // Sort the list
+    titleResults.sort(sortByTitle);
+    //console.log(titleResults);
+
+    // Now paint the results
+    document.getElementById("s-title-results").innerHTML = "";
+
+    for (i in titleResults) {
+        // Start by cloning the generic element
+        let e = genericTitle.cloneNode(true);
+        // Edit the fields as needed
+        e.id = "dataset-" + i;
+        e.lastChild.innerText = titleResults[i]["title"] + " (iss. " + (new Date(titleResults[i]["issued"])).getFullYear() + ")";
+        // Append it to the list
+        document.getElementById("s-title-results").appendChild(e);  
     }
 }
 
@@ -277,5 +287,4 @@ function reset() {
 
     // Reset title results
     document.getElementById("s-title-results").innerHTML = "";
-    //document.getElementById("s-title-results").appendChild(genericTitle.cloneNode(true));
 }
