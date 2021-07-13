@@ -48,7 +48,7 @@
                     <div class="col-md-12 mb-4">
                         <label for="i-dataset" class="form-label">Dataset URL</label>
                         <div class="input-group">
-                            <input id="i-dataset" type="url" class="form-control" placeholder="https://data.set/url" aria-label="Dataset URL" aria-describedby="button-addon">
+                            <input id="i-dataset" type="url" class="form-control" placeholder="https://data.set/url" aria-label="Dataset URL">
                             <button class="btn btn-outline-secondary" type="button" id="b-validatedirect" onclick="validate('direct')">Validate</button>
                         </div>
                     </div>
@@ -58,17 +58,19 @@
                 <h1 class="text-primary mb-4"><a href="#i-endpoint" onclick="select('s-option2')">option 2: search for a data set</a></h1>
                 <div id="s-option2" class="row my-5 visually-hidden">
 
+
                     <h3 class="text-primary mb-4">step 1: load endpoint</h3>
                     
                     <!-- Endpoint -->
                     <div class="col-md-12 mb-4">
                         <label for="i-endpoint" class="form-label">Endpoint URL</label>
                         <div class="input-group">
-                            <input id="i-endpoint" type="url" class="form-control" value="http://datos.gob.es/virtuoso/sparql" aria-label="Endpoint URL" aria-describedby="button-addon">
+                            <input id="i-endpoint" type="url" class="form-control" value="http://datos.gob.es/virtuoso/sparql" aria-label="Endpoint URL">
                             <button class="btn btn-outline-primary" type="button" id="button-addon" onclick="loadEndpoint()">Load</button>
                             <button class="btn btn-outline-primary" type="button" id="b-reset" onclick="reset()">Reset</button>
                         </div>
                     </div>
+
 
                     <h3 class="text-primary mb-4">step 2: apply filters</h3>
 
@@ -100,44 +102,28 @@
                         <button id="b-apply" type="button" class="btn form-control disabled btn-outline-primary btn-md" onclick="applyFilters()">Apply</button>
                     </div>
 
+
                     <h3 class="text-primary mb-4">step 3: select data set</h3>
 
                     <!-- Title -->
-                    <div class="col-md-6 mb-4">
+                    <div class="col-md-12 mb-4">
                         <label for="i-title" class="form-label">Title</label>
-                        <input type="text" onchange="searchTitles()" class="form-control" id="i-title" placeholder="Title words" disabled>
-                    </div>
-
-                    <!-- Language -->
-                    <div class="col-md-6 mb-4">
-                        <label for="i-language" class="form-label">Language</label>
-                        <select class="form-select" onchange="searchTitles()" aria-label="Language" id="i-language" disabled>
-                            <option selected>None</option>
-                        </select>
-                    </div>
-
-                    <!-- Issue date -->
-                    <div class="col-md-6 mb-4">
-                        <label for="i-issue" class="form-label">Issue year</label>
                         <div class="input-group">
-                            <input type="number" onchange="searchTitles()" class="form-control" id="i-issue" min="1970" max="2050" value="2021" disabled>
-                            <button class="btn btn-outline-secondary" type="button" id="b-toggle-issue" onclick="toggleIssue(); searchTitles()">Off</button>
-                        </div>
-                    </div>
-
-                    <!-- Modification date -->
-                    <div class="col-md-6 mb-4">
-                        <label for="i-modification" class="form-label">Modification year</label>
-                        <div class="input-group">
-                            <input type="number" onchange="searchTitles()" class="form-control" id="i-modification" min="1970" max="2050" value="2021" disabled>
-                            <button class="btn btn-outline-secondary" type="button" id="b-toggle-modification" onclick="toggleModification(); searchTitles()">Off</button>
+                            <select id="i-title" class="form-select" disabled></select>
+                            <button class="btn btn-outline-primary disabled" type="button" id="b-title-load" onclick="loadTitle()">Load</button>
                         </div>
                     </div>
 
 
-                    <!-- Results -->
-                    <div class="row" id="s-title-results">
-                        <div id="generic-title" class="visually-hidden col-md-12 p-3 mx-2"><i class="bi bi-caret-right-fill text-primary"></i> <a class="fs-5" href="#" onclick="validate(-1)">Título del conjunto de datos</a></div>
+                    <h3 class="text-primary mb-4">step 4: select distribution</h3>
+
+                    <!-- Distribution -->
+                    <div class="col-md-12 mb-4">
+                        <label for="i-distribution" class="form-label">Title</label>
+                        <div class="input-group">
+                            <select id="i-distribution" class="form-select" disabled></select>
+                            <button class="btn btn-outline-primary disabled" type="button" id="b-dist-validate" onclick="validate('dist')">Validate</button>
+                        </div>
                     </div>
                 </div>
             </section>
