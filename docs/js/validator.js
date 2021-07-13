@@ -214,7 +214,7 @@ function loadTitle() {
 function validate(type) {
     let dist = "";
     if (type == 'form') {
-        dist = document.getElementById("i-dataset").value;
+        dist = document.getElementById("i-direct-dist").value;
         console.log("Validating using form data: " + dist);
     } else {
         dist = document.getElementById("i-distribution").value;
