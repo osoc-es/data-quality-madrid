@@ -94,13 +94,12 @@ def getDatasetInfo(organismo,sector,keywords,endpoint:str = "https://datos.gob.e
     PREFIX dct: <http://purl.org/dc/terms/>
 	PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
 
-    select distinct ?title ?lang ?issued ?modified ?license ?dataset where
+    select distinct ?title ?issued ?modified ?license ?dataset where
     {
     ?dataset rdf:type dcat:Dataset .
         ?dataset dct:title ?title .  
         ?dataset dct:issued ?issued .
         ?dataset dct:license ?license .
-        ?dataset dct:language ?lang .
   		?dataset dct:modified ?modified.
 
     ?dataset dcat:theme $SECTOR . # ON-THE-FLY         	
@@ -110,11 +109,13 @@ def getDatasetInfo(organismo,sector,keywords,endpoint:str = "https://datos.gob.e
         ?distribution dct:format ?format .
             ?format rdf:value "text/csv" .
         
-    
+    # FILTROS
+    FILTER (lang(?title) = 'es')
     $KEYWORDSFILTER
 
     }
-    LIMIT 100
+    
+    LIMIT 200
     """)
 
     sparql.setQuery(query.substitute(SECTOR=sector,ORGANISMO=organismo,KEYWORDSFILTER=keywords))
@@ -132,7 +133,6 @@ def getDatasetInfo(organismo,sector,keywords,endpoint:str = "https://datos.gob.e
         filtered.append(
             {
                 "title":i["title"]["value"],
-                "lang":i["lang"]["value"],
                 "issued":i["issued"]["value"],
                 "modified":i["modified"]["value"],
                 "license":i["license"]["value"],
