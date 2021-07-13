@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.responses import FileResponse
-from RDF.funciones import getTematicas,getPublicadores,getDatasetInfo
+from RDF.funciones import getTematicas,getPublicadores,getDatasetInfo,getDistributionInfo
 from random import choice
 import os
 from Model.InputFilters import InputFilters
@@ -90,11 +90,36 @@ async def theme_publisher(endpoint:str = "https://datos.gob.es/virtuoso/sparql")
 
 @app.post("/getDatasets")
 async def getDatasets(inputfilters:InputFilters):
-    organismo = inputfilters.publisher if inputfilters.publisher != "All/Unspecified" else "/Organismo/"
-    sector = inputfilters.theme if inputfilters.theme != "All/Unspecified" else "/sector/"
-    print(f"getDatasets >> Sector:{sector} \tOrganismo: {organismo}")
-    return {"results":getDatasetInfo(organismo,sector,endpoint=inputfilters.endpoint)}
+    organismo = f"<{inputfilters.publisher}>" if inputfilters.publisher != "All/Unspecified" else "?publisherURI"
+    sector = f"<{inputfilters.theme}>" if inputfilters.theme != "All/Unspecified" else "?theme"
 
+    inputfilters_str =""
+    if(len(inputfilters.keywords) == 0):
+        inputfilters_str = ""
+    elif(len(inputfilters.keywords) == 1):
+        inputfilters_str = """
+         \nOPTIONAL {
+            ?dataset dcat:keyword ?result
+                FILTER (regex(?result,\""""+inputfilters.keywords[0]+"""\","i")) 
+        }\n
+        """
+    else:
+        inputfilters_str = """
+         \nOPTIONAL {
+            ?dataset dcat:keyword ?result
+                FILTER (regex(?result,"""+"|".join(inputfilters.keywords)+""","i")) 
+        }\n
+        """
+    
+
+    print(f"getDatasets >> Sector:{sector} \tOrganismo: {organismo}\tKeywords: {inputfilters.keywords}")
+    return {"results":getDatasetInfo(organismo,sector,inputfilters_str,endpoint=inputfilters.endpoint)}
+
+@app.post("/getDistributions")
+async def getDistributions(distributionUri:str):
+
+    print(f"getDistributions >> {distributionUri}")
+    return {"results":getDistributionInfo(distributionUri)}
 
 @app.post("/validateDataset")
 async def validateDataset(datasetLink:str):

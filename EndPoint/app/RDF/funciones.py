@@ -3,6 +3,9 @@ from rdflib import Graph
 import json
 from string import Template
 import time
+import requests
+import os
+import glob
 
 def runQuery(endpoint:str,query:str):
     sparql = SPARQLWrapper(endpoint)
@@ -19,13 +22,13 @@ def getTematicas(endpoint:str = "https://datos.gob.es/virtuoso/sparql"):
     start = time.time()
     query = """
         PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+        PREFIX dcat: <http://www.w3.org/ns/dcat#>
+        PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
         PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
-
-        select distinct ?name ?url where
+        select distinct ?theme ?sector where
         {
-        ?url rdf:type skos:Concept .
-        ?url skos:notation ?name
-        FILTER  (regex(?url,"/sector/","i"))
+        ?dataset dcat:theme ?theme .
+        ?theme skos:notation ?sector .
         }
     """
     
@@ -39,8 +42,8 @@ def getTematicas(endpoint:str = "https://datos.gob.es/virtuoso/sparql"):
     for i in results:
         filtered.append(
             {
-                "name":i["name"]["value"],
-                "url":i["url"]["value"]
+                "name":i["sector"]["value"],
+                "url":i["theme"]["value"]
             }
         )
     
@@ -52,13 +55,15 @@ def getPublicadores(endpoint:str = "https://datos.gob.es/virtuoso/sparql"):
     start = time.time()
     query = """
         PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+        PREFIX dcat: <http://www.w3.org/ns/dcat#>
+        PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
         PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+        PREFIX dct: <http://purl.org/dc/terms/>
 
-        select distinct ?name ?url where
+        select distinct ?publisher ?name where
         {
-        ?url rdf:type skos:Concept .
-        ?url skos:prefLabel ?name
-        FILTER  (regex(?url,"/Organismo/","i"))
+        ?dataset dct:publisher ?publisher .
+        ?publisher skos:prefLabel ?name .
         }
     """
     results = runQuery(endpoint,query)["results"]["bindings"]
@@ -71,7 +76,7 @@ def getPublicadores(endpoint:str = "https://datos.gob.es/virtuoso/sparql"):
         filtered.append(
             {
                 "name":i["name"]["value"],
-                "url":i["url"]["value"]
+                "url":i["publisher"]["value"]
             }
         )
     
@@ -80,7 +85,7 @@ def getPublicadores(endpoint:str = "https://datos.gob.es/virtuoso/sparql"):
 
     return filtered
 
-def getDatasetInfo(organismo,sector,endpoint:str = "https://datos.gob.es/virtuoso/sparql"):
+def getDatasetInfo(organismo,sector,keywords,endpoint:str = "https://datos.gob.es/virtuoso/sparql"):
     start = time.time()
     sparql = SPARQLWrapper(endpoint)
     query = Template("""
@@ -90,7 +95,7 @@ def getDatasetInfo(organismo,sector,endpoint:str = "https://datos.gob.es/virtuos
     PREFIX dct: <http://purl.org/dc/terms/>
 	PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
 
-    select distinct ?title ?url ?lang ?sector ?publisher ?issued ?modified ?license ?format_value where
+    select distinct ?title ?lang ?issued ?modified ?license ?dataset where
     {
     ?dataset rdf:type dcat:Dataset .
         ?dataset dct:title ?title .  
@@ -98,30 +103,22 @@ def getDatasetInfo(organismo,sector,endpoint:str = "https://datos.gob.es/virtuos
         ?dataset dct:license ?license .
         ?dataset dct:language ?lang .
   		?dataset dct:modified ?modified.
-  	
+
+    ?dataset dcat:theme $SECTOR . # ON-THE-FLY         	
+  	?dataset dct:publisher $ORGANISMO . # ON-THE-FLY 
+
     ?dataset dcat:distribution ?distribution .
-  		?distribution dcat:accessURL ?url .
         ?distribution dct:format ?format .
-            ?format rdf:value ?format_value .
-  	?dataset dcat:theme ?theme .
-    	?theme rdf:type skos:Concept .
-        	?theme skos:notation ?sector .
-        	
-  	?dataset dct:publisher ?publisherURI .
-  		?publisherURI rdf:type skos:Concept .
-        	?publisherURI skos:prefLabel ?publisher .
-        	
+            ?format rdf:value "text/csv" .
         
-    # Filtros 
-      	
-    FILTER  (regex(?theme,"$SECTOR","i")) # Filtro Sector 
-    FILTER  (regex(?publisherURI,"$ORGANISMO","i")) # Filtro Organismo     
-    FILTER (regex(?format_value,"text/csv","i")) # Tiene que ser CSV
+    
+    $KEYWORDSFILTER
+
     }
-    LIMIT 500
+    LIMIT 100
     """)
 
-    sparql.setQuery(query.substitute(SECTOR=sector,ORGANISMO=organismo))
+    sparql.setQuery(query.substitute(SECTOR=sector,ORGANISMO=organismo,KEYWORDSFILTER=keywords))
 
     sparql.setReturnFormat(JSON)
     results = sparql.query().convert()["results"]["bindings"]
@@ -136,14 +133,11 @@ def getDatasetInfo(organismo,sector,endpoint:str = "https://datos.gob.es/virtuos
         filtered.append(
             {
                 "title":i["title"]["value"],
-                "url":i["url"]["value"],
                 "lang":i["lang"]["value"],
-                "sector":i["sector"]["value"],
-                "publisher":i["publisher"]["value"],
                 "issued":i["issued"]["value"],
                 "modified":i["modified"]["value"],
                 "license":i["license"]["value"],
-                "format":i["format_value"]["value"]
+                "dataset":i["dataset"]["value"]
             }
         )
      
@@ -151,3 +145,74 @@ def getDatasetInfo(organismo,sector,endpoint:str = "https://datos.gob.es/virtuos
     print(f"getDatasetInfo >> TIME ELAPSE FORMATTING : {end - start}")
 
     return filtered
+
+def getDistributionInfo(datasetURI,endpoint:str = "https://datos.gob.es/virtuoso/sparql"):
+    start = time.time()
+    sparql = SPARQLWrapper(endpoint)    
+    query = Template("""
+    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+    PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+    PREFIX dcat: <http://www.w3.org/ns/dcat#> 
+    PREFIX dct: <http://purl.org/dc/terms/>
+
+        select distinct ?title ?accessURL where
+        {
+        <$DATASETURI> dcat:distribution ?distribution .
+            ?distribution dct:format ?format .
+            ?distribution dct:title ?title .
+            ?distribution dcat:accessURL ?accessURL .
+                ?format rdf:value "text/csv"      
+        }
+    """)
+    sparql.setQuery(query.substitute(DATASETURI=datasetURI))
+    sparql.setReturnFormat(JSON)
+    results = sparql.query().convert()["results"]["bindings"]
+
+    print(results)
+    end = time.time()
+    print(f"getDistributionInfo >> TIME ELAPSE QUERY : {end - start}")
+    #results = runQuery(endpoint,query)["results"]["bindings"]
+    start = time.time()
+    filtered = []
+    for i in results:
+        filtered.append(
+            {
+                "name":i["title"]["value"],
+                "url":i["accessURL"]["value"]
+            }
+        )
+    
+    end = time.time()
+    print(f"getDistributionInfo >> TIME ELAPSE FORMATTING : {end - start}")
+    return filtered
+
+
+def downloadCSV(url:str):
+    '''
+    Downloads csv file from url and saves it
+    '''
+    csvFolder = "./CSV"
+
+    start = time.time()       
+    response = requests.get(url)       
+    end = time.time()     
+    
+    print(f"downloadCSV >> TIME ELAPSE DOWNLOAD : {end - start}")   
+
+    if not os.path.exists(csvFolder):
+        os.mkdir(csvFolder)
+
+    # Count files in CSV folder with extension .csv
+    files_count = len(glob.glob(f'{csvFolder}/*.csv'))
+    files_count += 1
+
+    filename = f"{csvFolder}/CSV2Check{files_count}.csv"       
+    with open(filename, "wb") as f:       
+        f.write(response.content)   
+    # Llamar al procesado de csv con el nombre del archivo
+    # processCSV(filename)
+
+    os.remove(filename)
+    
+    return filename
+

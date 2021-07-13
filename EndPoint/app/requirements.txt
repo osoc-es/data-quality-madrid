@@ -4,3 +4,4 @@ fastapi
 jupyter
 aiofiles
 uvicorn
+requests
