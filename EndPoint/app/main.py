@@ -116,10 +116,10 @@ async def getDatasets(inputfilters:InputFilters):
     return {"results":getDatasetInfo(organismo,sector,inputfilters_str,endpoint=inputfilters.endpoint)}
 
 @app.post("/getDistributions")
-async def getDistributions(distributionUri:str):
+async def getDistributions(distributionUri:str,endpoint:str = "https://datos.gob.es/virtuoso/sparql"):
 
     print(f"getDistributions >> {distributionUri}")
-    return {"results":getDistributionInfo(distributionUri)}
+    return {"results":getDistributionInfo(distributionUri,endpoint=endpoint)}
 
 @app.post("/validateDataset")
 async def validateDataset(datasetLink:str):

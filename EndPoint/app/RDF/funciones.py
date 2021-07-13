@@ -17,7 +17,6 @@ def runQuery(endpoint:str,query:str):
 
     return results
 
-
 def getTematicas(endpoint:str = "https://datos.gob.es/virtuoso/sparql"):
     start = time.time()
     query = """
@@ -185,7 +184,6 @@ def getDistributionInfo(datasetURI,endpoint:str = "https://datos.gob.es/virtuoso
     end = time.time()
     print(f"getDistributionInfo >> TIME ELAPSE FORMATTING : {end - start}")
     return filtered
-
 
 def downloadCSV(url:str):
     '''
