@@ -66,6 +66,7 @@
                         <div class="input-group">
                             <input id="i-endpoint" type="url" class="form-control" value="http://datos.gob.es/virtuoso/sparql" aria-label="Endpoint URL" aria-describedby="button-addon">
                             <button class="btn btn-outline-primary" type="button" id="button-addon" onclick="loadEndpoint()">Load</button>
+                            <button class="btn btn-outline-primary" type="button" id="b-reset" onclick="reset()">Reset</button>
                         </div>
                     </div>
 
@@ -87,22 +88,6 @@
                         </select>
                     </div>
 
-                    <!-- Administrative level -->
-                    <!--<div class="col-md-6 mb-4">
-                        <label for="i-level" class="form-label">Administrative level</label>
-                        <select class="form-select" aria-label="Administrative level" id="i-level" disabled>
-                            <option selected>None</option>
-                        </select>
-                    </div>-->
-
-                    <!--<div class="col-md-6 mb-4">
-                        <label for="i-publisher" class="form-label">Publisher</label>
-                        <input class="form-control" list="i-publisherdl" id="i-publisher" placeholder="Search">
-                        <datalist id="i-publisherdl">
-                            <option>All/Unspecified</option>
-                        </datalist>
-                    </div>-->
-
                     <!-- Keywords -->
                     <div class="col-md-6 mb-4">
                         <label for="i-keywords" class="form-label">Keywords (separated by commas)</label>
@@ -114,22 +99,45 @@
                         <label for="b-apply" class="form-label"><br class="d-none d-md-block"></label>
                         <button id="b-apply" type="button" class="btn form-control disabled btn-outline-primary btn-md" onclick="applyFilters()">Apply</button>
                     </div>
-                    <!--<div class="mb-4 d-grid gap-4 d-sm-flex justify-content-sm-center align-items-center text-center">
-                        <button id="b-apply" type="button" class="btn disabled btn-outline-primary btn-lg px-4" onclick="applyFilters()">Apply</button>
-                    </div>-->
 
                     <h3 class="text-primary mb-4">step 3: select data set</h3>
 
                     <!-- Title -->
-                    <div class="col-md-12">
+                    <div class="col-md-6 mb-4">
                         <label for="i-title" class="form-label">Title</label>
+                        <input type="text" onchange="searchTitles()" class="form-control" id="i-title" placeholder="Title words" disabled>
+                    </div>
+
+                    <!-- Language -->
+                    <div class="col-md-6 mb-4">
+                        <label for="i-language" class="form-label">Language</label>
+                        <select class="form-select" onchange="searchTitles()" aria-label="Language" id="i-language" disabled>
+                            <option selected>None</option>
+                        </select>
+                    </div>
+
+                    <!-- Issue date -->
+                    <div class="col-md-6 mb-4">
+                        <label for="i-issue" class="form-label">Issue year</label>
                         <div class="input-group">
-                            <select class="form-select" aria-label="Title" id="i-title" disabled>
-                                <option selected>None</option>
-                            </select>
-                            <button class="btn disabled btn-outline-secondary" type="button" id="b-validate" onclick="validate('direct')">Validate</button>
-                            <button class="btn btn-outline-primary" type="button" id="b-reset" onclick="reset()">Reset</button>
+                            <input type="number" onchange="searchTitles()" class="form-control" id="i-issue" min="1970" max="2050" value="2021" disabled>
+                            <button class="btn btn-outline-secondary" type="button" id="b-toggle-issue" onclick="toggleIssue(); searchTitles()">Off</button>
                         </div>
+                    </div>
+
+                    <!-- Modification date -->
+                    <div class="col-md-6 mb-4">
+                        <label for="i-modification" class="form-label">Modification year</label>
+                        <div class="input-group">
+                            <input type="number" onchange="searchTitles()" class="form-control" id="i-modification" min="1970" max="2050" value="2021" disabled>
+                            <button class="btn btn-outline-secondary" type="button" id="b-toggle-modification" onclick="toggleModification(); searchTitles()">Off</button>
+                        </div>
+                    </div>
+
+
+                    <!-- Results -->
+                    <div class="row" id="s-title-results">
+                        <div id="generic-title" class="visually-hidden col-md-12 p-3 mx-2"><i class="bi bi-caret-right-fill text-primary"></i> <a class="fs-5" href="#" onclick="validate(-1)">Título del conjunto de datos</a></div>
                     </div>
                 </div>
             </section>

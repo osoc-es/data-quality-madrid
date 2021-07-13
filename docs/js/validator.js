@@ -3,6 +3,12 @@ const BACKEND_URL = "https://dataquality.herokuapp.com/";
 var themes = [];
 var publishers = [];
 var titles = [];
+var titleResults = [];
+var genericTitle = document.getElementById("generic-title").cloneNode(true);
+genericTitle.classList.remove("visually-hidden");
+var issueEnabled = false;
+var modificationEnabled = false;
+
 
 
 let selectable = ["s-option1", "s-option2"];
@@ -16,9 +22,16 @@ function select(elem) {
 }
 
 
-function sortAlphabetically(a, b) {
+function sortByName(a, b) {
     if (a["name"] > b["name"]) return 1;
     else if (a["name"] == b["name"]) return 0;
+    else return -1;
+}
+
+
+function sortByTitle(a, b) {
+    if (a["title"] > b["title"]) return 1;
+    else if (a["title"] == b["title"]) return 0;
     else return -1;
 }
 
@@ -51,7 +64,7 @@ function loadEndpoint() {
             publishers = response["publisher"];
 
             // Sort publishers by name
-            publishers.sort(sortAlphabetically);
+            publishers.sort(sortByName);
 
             // Set the themes
             let t = document.getElementById("i-theme");
@@ -72,15 +85,6 @@ function loadEndpoint() {
                 e.value = i;
                 p.append(e);
             }
-            /*let p = document.getElementById("i-publisherdl");
-            p.disabled = true;
-            p.innerHTML = "<option>All/Unspecified</option>";
-            for (i in publishers) {
-                let e = document.createElement("option");
-                e.innerText = publishers[i]["name"];
-                p.append(e);
-            }
-            p.disabled = false;*/
 
             // If there were no errors (didn't return before), enable more fields
             document.getElementById("i-theme").disabled = false;
@@ -138,18 +142,29 @@ function applyFilters() {
             // Parse the response string into an object
             let response = JSON.parse(req.response);
             titles = response["results"];
-            // Set the titles (TODO change to a search thing)
-            let t = document.getElementById("i-title");
-            t.innerHTML = "<option value=-1>Unspecified</option>";
-            for (i in titles) {
+
+            // Now the user can search their stuff
+            
+            // Set the language list
+            let langs = [];
+            for (i in titles) if (!langs.includes(titles[i]["lang"])) langs.push(titles[i]["lang"]);
+            let l = document.getElementById("i-language");
+            l.innerHTML = "<option>All</option>";
+            for (i in langs) {
                 let e = document.createElement("option");
-                e.innerText = titles[i]["title"];
-                e.value = i;
-                t.append(e);
+                e.innerText = langs[i];
+                //e.value = i;
+                l.append(e);
             }
+
+            // Enable fields
             document.getElementById("i-title").disabled = false;
-            document.getElementById("b-validate").classList.remove("disabled");
-            // ... TODO search
+            document.getElementById("i-language").disabled = false;
+            document.getElementById("i-issue").disabled = false;
+            document.getElementById("i-modification").disabled = false;
+
+            // Show titles
+            searchTitles();
         }
     }
 
@@ -160,11 +175,85 @@ function applyFilters() {
 }
 
 
+function searchTitles() {
+    // First retrieve search filters
+    let title = document.getElementById("i-title").value;
+    let language = document.getElementById("i-language").value;
+    let issue = document.getElementById("i-issue").value;
+    let modification = document.getElementById("i-modification").value;
+
+    // Start with no datasets and copy the ones that satisfy the conditions
+    titleResults = [];
+
+    // Remove all elements that do not fit any of the filters
+    for (i in titles) {
+        
+        //console.log("Checking " + i + " (" + titles[i]["title"] + ")");
+        let idate = new Date(titles[i]["issued"]);
+        let mdate = new Date(titles[i]["modified"]);
+
+        // Check whether the title is contained in the dataset title
+        if (title != "" && !titles[i]["title"].includes(title)) {
+            //console.log("Not copied " + titles[i]["title"] + ": it does not contain '" + title + "'");
+            continue;
+        
+        // Check whether the language matches
+        } else if (language != "All" && titles[i]["lang"] != language) {
+            //console.log("Not copied " + titles[i]["title"] + ": its language (" + titles[i]["lang"] + ") is not " + language);
+            continue;
+        
+        // Check whether issue date is enabled and matches
+        } else if (issueEnabled && idate.getFullYear() != issue) {
+            //console.log("Not copied " + titles[i]["title"] + ": its issue date is " + idate.getFullYear() + " instead of " + issue);
+            continue;
+        
+        // Check whether modification date is enabled and matches
+        } else if (modificationEnabled && mdate.getFullYear() != modification) {
+            //console.log("Not copied " + titles[i]["title"] + ": its modification date is " + mdate.getFullYear() + " instead of " + modification);
+            continue;
+
+        // If it satisfies everything, copy it
+        } else {
+            titleResults.push(titles[i]);
+        }
+    }
+
+    // Sort the list
+    titleResults.sort(sortByTitle);
+    //console.log(titleResults);
+
+    // Now paint the results
+    document.getElementById("s-title-results").innerHTML = "";
+
+    for (i in titleResults) {
+        // Start by cloning the generic element
+        let e = genericTitle.cloneNode(true);
+        // Edit the fields as needed
+        e.id = "dataset-" + i;
+        e.lastChild.innerText = titleResults[i]["title"] + " (iss. " + (new Date(titleResults[i]["issued"])).getFullYear() + ")";
+        // Append it to the list
+        document.getElementById("s-title-results").appendChild(e);  
+    }
+}
+
+
+function toggleIssue() {
+    issueEnabled = !issueEnabled;
+    document.getElementById("b-toggle-issue").innerText = issueEnabled ? "On" : "Off";
+}
+
+
+function toggleModification() {
+    modificationEnabled = !modificationEnabled;
+    document.getElementById("b-toggle-modification").innerText = modificationEnabled ? "On" : "Off";
+}
+
+
 function validate(type) {
     if (type == 'form') {
         showError("Validating using form data");
     } else {
-        showError("Validating using direct URL")
+        showError("Validating using direct URL for element " + type);
     }
 }
 
@@ -175,15 +264,27 @@ function reset() {
     document.getElementById("i-publisher").disabled = true;
     document.getElementById("i-keywords").disabled = true;
     document.getElementById("i-title").disabled = true;
+    document.getElementById("i-language").disabled = true;
+    document.getElementById("i-issue").disabled = true;
+    document.getElementById("i-modification").disabled = true;
+
     // Disable buttons
     document.getElementById("b-apply").classList.add("disabled");
-    document.getElementById("b-validate").classList.add("disabled");
 
+    // Reset input field values
+    document.getElementById("i-theme").innerHTML = "<option>None</option>";
+    document.getElementById("i-publisher").innerHTML = "<option>None</option>";
+    document.getElementById("i-keywords").value = "";
+    document.getElementById("i-title").value = "";
+    document.getElementById("i-language").value = "All";
+    document.getElementById("i-issue").value = 2021;
+    document.getElementById("i-modification").value = 2021;
+
+    // Free storage
     themes = [];
     publishers = [];
     titles = [];
 
-    document.getElementById("i-theme").innerHTML = "<option>None</option>";
-    document.getElementById("i-publisher").innerHTML = "<option>None</option>";
-    document.getElementById("i-keywords").value = "";
+    // Reset title results
+    document.getElementById("s-title-results").innerHTML = "";
 }
