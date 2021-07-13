@@ -49,7 +49,7 @@ function loadEndpoint() {
 
     // This is what happens when the request is updated (sent, response received, error...)
     req.onreadystatechange = function() {
-        console.log("Request status: " + req.readyState);
+        console.log("loadEndpoint() request status: " + req.readyState);
         // If it worked correctly, set the data in the form
         if (req.readyState == 4 && req.status == 200) {
             
@@ -131,7 +131,7 @@ function applyFilters() {
     let req = new XMLHttpRequest();
     // This is what happens when the request is updated (sent, response received, error...)
     req.onreadystatechange = function() {
-        console.log("Request status: " + req.readyState);
+        console.log("applyFilters() request status: " + req.readyState);
         // If it worked correctly, set the data in the form
         if (req.readyState == 4 && req.status == 200) {
             
@@ -175,7 +175,7 @@ function loadTitle() {
     let req = new XMLHttpRequest();
     // This is what happens when the request is updated (sent, response received, error...)
     req.onreadystatechange = function() {
-        console.log("Request status: " + req.readyState);
+        console.log("loadTitle() request status: " + req.readyState);
         // If it worked correctly, set the data in the form
         if (req.readyState == 4 && req.status == 200) {
             
@@ -212,11 +212,36 @@ function loadTitle() {
 
 
 function validate(type) {
+    let dist = "";
     if (type == 'form') {
-        showError("Validating using form data");
+        dist = document.getElementById("i-dataset").value;
+        console.log("Validating using form data: " + dist);
     } else {
-        showError("Validating using distribution");
+        dist = document.getElementById("i-distribution").value;
+        dist = dists[dist]["url"];
+        console.log("Validating using search: " + dist);
     }
+
+    // Create the request
+    let req = new XMLHttpRequest();
+    // This is what happens when the request is updated (sent, response received, error...)
+    req.onreadystatechange = function() {
+        console.log("validate() request status: " + req.readyState);
+        // If it worked correctly, set the data in the form
+        if (req.readyState == 4 && req.status == 200) {
+            
+            // Parse the response string into an object
+            let response = JSON.parse(req.response);
+            console.log(response);
+
+            // TODO show report
+        }
+    }
+
+    req.open("POST", BACKEND_URL + "validateDataset/?datasetLink=" + encodeURIComponent(dist), true);
+    // We are sending a JSON object so set the header
+    req.setRequestHeader('Content-Type', 'application/json');
+    req.send(null);
 }
 
 
