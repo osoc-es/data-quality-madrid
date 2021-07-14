@@ -1,9 +1,9 @@
 from fastapi import FastAPI
 from fastapi.responses import FileResponse
-from RDF.funciones import getTematicas,getPublicadores,getDatasetInfo,getDistributionInfo
+from .RDF.funciones import getTematicas,getPublicadores,getDatasetInfo,getDistributionInfo
 from random import choice
 import os
-from Model.InputFilters import InputFilters
+from .Model.InputFilters import InputFilters
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()

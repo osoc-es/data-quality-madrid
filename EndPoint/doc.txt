@@ -1,3 +1,2 @@
-https://github.com/tiangolo/uvicorn-gunicorn-fastapi-docker
 docker build -t dataquality .
 docker run -d --name DataQuality -p 80:80 dataquality
