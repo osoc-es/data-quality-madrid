@@ -235,6 +235,9 @@ function validate(type) {
             console.log(response);
 
             // TODO show report
+
+            // Display the
+            document.getElementById("s-results").classList.remove("visually-hidden");
         }
     }
 
@@ -263,8 +266,12 @@ function reset() {
     document.getElementById("i-keywords").value = "";
     document.getElementById("i-title").value = "";
 
+    // Hide analysis results
+    document.getElementById("s-results").classList.add("visually-hidden");
+
     // Free storage
     themes = [];
     publishers = [];
     titles = [];
+    dists = [];
 }
