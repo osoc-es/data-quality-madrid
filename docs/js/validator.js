@@ -4,6 +4,7 @@ let themes = [];
 let publishers = [];
 let titles = [];
 let dists = [];
+let caca;
 
 
 
@@ -211,6 +212,22 @@ function loadTitle() {
 }
 
 
+function setElementToInvalid(id) {
+    document.getElementById(id).classList.remove("text-secondary");
+    document.getElementById(id).classList.add("text-primary");
+    document.getElementById(id).firstChild.classList.remove("bi-check-lg");
+    document.getElementById(id).firstChild.classList.add("bi-x-lg");
+}
+
+
+function setElementToValid(id) {
+    document.getElementById(id).classList.remove("text-primary");
+    document.getElementById(id).classList.add("text-secondary");
+    document.getElementById(id).firstChild.classList.remove("bi-x-lg");
+    document.getElementById(id).firstChild.classList.add("bi-check-lg");
+}
+
+
 function validate(type) {
     let dist = "";
     if (type == 'form') {
@@ -231,12 +248,67 @@ function validate(type) {
         if (req.readyState == 4 && req.status == 200) {
             
             // Parse the response string into an object
-            let response = JSON.parse(req.response);
-            console.log(response);
+            let r = JSON.parse(req.response);
+            console.log(r);
 
-            // TODO show report
 
-            // Display the
+            // Set the results
+
+            // Columns
+            let st = 100;
+            //  - Avoid repetition
+            if (r["columnas"]["repeticion"].length > 0) {
+                setElementToInvalid("r-col-rep");
+                st -= 100;
+            }
+            document.getElementById("r-col-st").innerText = "Subtotal: " + st + "%"
+
+            // Unknown values
+            st = 100;
+            //  - Common code
+            // TODO not present in the response for now
+            document.getElementById("r-unk-st").innerText = "Subtotal: " + st + "%"
+
+            // Text fields
+            st = 100;
+            //  - Numeric values with zeroes to the left
+            if (r["CamposTexto"]["ceroizquierda"].length > 0) {
+                setElementToInvalid("r-txt-zer");
+                st -= 100;
+            }
+            document.getElementById("r-txt-st").innerText = "Subtotal: " + st + "%"
+
+            // Number fields
+            st = 100;
+            //  - Decimal separators (varies with region)
+            if (r["CampoNumerico"]["Region"].length > 0) {
+                setElementToInvalid("r-num-sep");
+                st -= 100; // TODO change if there is another one finally
+            }
+            // TODO the other one?
+            document.getElementById("r-num-st").innerText = "Subtotal: " + st + "%"
+
+            // Date fields
+            st = 100;
+            //  - ISO 8601 format
+            if (r["Fechas"]["formatoFecha"].length > 0) {
+                setElementToInvalid("r-dat-iso");
+                st -= 100; // TODO change if there is another one finally
+            }
+            // TODO the other one?
+            document.getElementById("r-dat-st").innerText = "Subtotal: " + st + "%"
+
+            // Phone number fields
+            st = 100;
+            //  - Country code
+            if (r["CampoTelefono"]["codigopais"].length > 0) {
+                setElementToInvalid("r-phn-cod");
+                st -= 100;
+            }
+            document.getElementById("r-phn-st").innerText = "Subtotal: " + st + "%"
+
+
+            // Display the results section
             document.getElementById("s-results").classList.remove("visually-hidden");
         }
     }
@@ -268,6 +340,15 @@ function reset() {
 
     // Hide analysis results
     document.getElementById("s-results").classList.add("visually-hidden");
+
+    // Reset analysis result fields
+    setElementToValid("r-col-rep");
+    setElementToValid("r-unk-com");
+    setElementToValid("r-txt-zer");
+    setElementToValid("r-num-sep");
+    setElementToValid("r-num-par");
+    setElementToValid("r-dat-iso");
+    setElementToValid("r-phn-cod");
 
     // Free storage
     themes = [];
