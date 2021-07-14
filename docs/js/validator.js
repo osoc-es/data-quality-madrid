@@ -252,7 +252,19 @@ function validate(type) {
             console.log(r);
 
 
-            // Set the results
+            // Set the results. First reset some fields
+            document.getElementById("r-qbar-low").classList.add("visually-hidden");
+            document.getElementById("r-qbar-high").classList.add("visually-hidden");
+            // Reset analysis result fields
+            setElementToValid("r-col-rep");
+            //setElementToValid("r-unk-com");
+            setElementToValid("r-txt-zer");
+            setElementToValid("r-num-sep");
+            //setElementToValid("r-num-par");
+            setElementToValid("r-dat-iso");
+            setElementToValid("r-phn-cod");
+
+            // This is used to average the subtotals
             let total = [];
 
             // Columns
@@ -369,17 +381,6 @@ function reset() {
 
     // Hide analysis results
     document.getElementById("s-results").classList.add("visually-hidden");
-    document.getElementById("r-qbar-low").classList.add("visually-hidden");
-    document.getElementById("r-qbar-high").classList.add("visually-hidden");
-
-    // Reset analysis result fields
-    setElementToValid("r-col-rep");
-    setElementToValid("r-unk-com");
-    setElementToValid("r-txt-zer");
-    setElementToValid("r-num-sep");
-    setElementToValid("r-num-par");
-    setElementToValid("r-dat-iso");
-    setElementToValid("r-phn-cod");
 
     // Free storage
     themes = [];
