@@ -1,9 +1,10 @@
 from fastapi import FastAPI
 from fastapi.responses import FileResponse
-from .RDF.funciones import getTematicas,getPublicadores,getDatasetInfo,getDistributionInfo
+from RDF.funciones import getTematicas,getPublicadores,getDatasetInfo,getDistributionInfo,downloadCSV
 from random import choice
 import os
-from .Model.InputFilters import InputFilters
+from Model.InputFilters import InputFilters
+from RDF.validator import initializeProcess
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
@@ -123,5 +124,39 @@ async def getDistributions(distributionUri:str,endpoint:str = "https://datos.gob
 
 @app.post("/validateDataset")
 async def validateDataset(datasetLink:str):
-    return datasetLink
+    dictErrs = {
+        "columnas":
+            {
+                "repeticion" :[]
+            },
+
+        "CamposTexto":
+            {
+                "ceroizquierda": []
+            },
+        "CampoNumerico":
+            {
+                "Region" :[]
+            },
+        "Fechas":
+            {
+                "formatoFecha" :[]
+            },
+        "CampoTelefono":
+            {
+                "codigopais":[]
+            },
+        "errorProcessing":"" # Si en el proceso de descarga o validacion se encontraron errores de funciones del backend, este flag sera True
+        }
+
+    try:
+        filePath = downloadCSV(datasetLink)
+        dictErrs = initializeProcess(filePath)
+        os.remove(filePath)
+    except Exception as e:
+        print(e)
+        dictErrs["errorProcessing"]=e
+        return dictErrs
+    
+    return dictErrs
 

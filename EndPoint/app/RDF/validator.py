@@ -5,37 +5,68 @@ import re
 def initializeProcess(csvFile:str):
 
     # Initialize the process
-    f = open(csvFile, "r")
+    f = open(csvFile, "r",encoding="ISO8859-1")
     lines = f.readlines()
-    delimiter = findDelimiter(f)
+
+    delimiter = findDelimiter(lines[0:10])
 
     rowCount = 0
 
     dictErrs = {
-        "fechas" : [],
-        "numbers": [],
-        "telf":[],
-        "repetition": [],
-        "text" : []
-    }
+        "columnas":
+            {
+                "repeticion" :[]
+            },
 
+        "CamposTexto":
+            {
+                "ceroizquierda": []
+            },
+        "CampoNumerico":
+            {
+                "Region" :[]
+            },
+        "Fechas":
+            {
+                "formatoFecha" :[]
+            },
+        "CampoTelefono":
+            {
+                "codigopais":[]
+            },
+        "errorProcessing":"" 
+        }
+    
+    f.close()
     for line in lines:
         row = line.split(delimiter)
 
         if(rowCount == 0):
-            dictErrs["repetition"] = hasRepetitiveCols(row)
+            dictErrs["repetition"] = hasRepetitiveCols(row,rowCount)
+            rowCount += 1
             continue
+
         col = 0
-        for i in row:
-            
+        for val in row:
+            # Pasar filtros
+            # ((rowCount,col), <Error/Valor>)
+            try:
+                dictErrs["CamposTexto"]["ceroizquierda"] += [((rowCount,col), val)] if checkNumber(val) else []
+                dictErrs["CampoNumerico"]["Region"] += [((rowCount,col), val)] if checkCorrectNumber(val) else []            
+                dictErrs["Fechas"]["formatoFecha"] += [((rowCount,col), val)] if checkFechas(val) else []
+                dictErrs["CampoTelefono"]["codigopais"] += [((rowCount,col), val)] if checkTelephone(val) else []
+            except Exception as e:
+                print(e)
+                continue
+
             col += 1
-
-
-
+        if(rowCount>50):
+            break
         rowCount += 1
-
+    
     return dictErrs
-def hasRepetitiveCols(row):
+
+def hasRepetitiveCols(row,rowCount):
     '''Check if the row has repetitive columns
           
       Args:
@@ -43,14 +74,17 @@ def hasRepetitiveCols(row):
       Returns:
           True if the row has repetitive columns
     '''
+    repetitives = []
     cols = set()
+    colNum = 0
     for col in row:
         if col in cols:
-            return True
+            repetitives += [((rowCount,colNum),col)]
         cols.add(col)
-    return False
+        colNum += 1
+    return repetitives
 
-def findDelimiter(csvFile):
+def findDelimiter(lines):
     '''Find delimiter
           
       Args:
@@ -58,11 +92,17 @@ def findDelimiter(csvFile):
       Returns:
           delimiter
     '''
-    dialect = csv.Sniffer().sniff(csvFile.read())
-    csvFile.seek(0)
-    csvFile.close()
-    return dialect.delimiter
+    def most_frequent(List):
+        return max(set(List), key = List.count)
 
+    delimitadores = []
+    for i in lines:
+        
+        dialect = csv.Sniffer().sniff(i)
+        delimitadores += [dialect.delimiter]
+    
+    return most_frequent(delimitadores)
+    
 def checkNumber(value):
     # Se puede convertir 009 --> 9
     try:
@@ -118,20 +158,30 @@ def checkTelephone(value):
 
 def checkCorrectNumber(value):
     #Si tenemos un entero, hemos de revisar que en caso de ser negativo no vaya entre parentesis.
-    try:
-        #El valor es negativo, luego revisamos que no haya instancias de "("
-        if (int(value) < 0):
-            if(value.count("(")) > 0:
-                return True
-    except Exception:
-        #Revisamos si es un numero con separador regional (en ESP, comas). Ha de tener una sola coma.
-        if value.count(",") > 1:
+    #El valor es negativo, luego revisamos que no haya instancias de "("
+    if(((value.count(")")) > 0) and ((value.count("(")) > 0)):
+        if(int((value.replace("(","")).replace(")","")) < 0):
             return True
-        else:
-            res = value.split(",")
-            #Vemos que lo que queda a ambos lados de la coma sean enteros.
+    else:
+        #Revisamos que no tenga separador de millares. 
+        if value.count(".") > 0:
+            res = value.split(".")
+            #Vemos que lo que queda a ambos lados del punto sean enteros.
             for i in res:
                 try:
                     int(i)
                 except Exception:
-                    return True
+                    pass
+            return True
+        #Revisamos si es un numero con separador regional (en ESP, comas). 
+        if value.count(",") > 0:
+            if(float("123,123".replace(",","."))):
+                pass
+            else:
+                res = value.split(",")
+                for i in res:
+                    try:
+                        int(i)
+                    except Exception:
+                        pass
+                return True
