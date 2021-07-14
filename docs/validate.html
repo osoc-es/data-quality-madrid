@@ -132,8 +132,9 @@
             <hr class="my-5">
 
 
-            <section class="container col-xxl-8 px-4 py-4 visually-hidden">
+            <section id="s-results" class="container col-xxl-8 px-4 py-4 visually-hidden">
                 
+                <!-- General analysis -->
                 <h1 class="text-primary mb-5">general analysis</h1>
 
                 <!-- Progress bar -->
@@ -141,6 +142,8 @@
                     <div id="r-quality-factor" class="progress-bar" role="progressbar" style="width: 57%;" aria-valuenow="57" aria-valuemin="0" aria-valuemax="100"><h4>quality: 57%</h4></div>
                 </div>
 
+
+                <!-- Observations -->
                 <h2 class="text-primary mb-4">observations</h2>
 
                 <div class="mb-5">
@@ -152,7 +155,61 @@
                     </span>
                 </div>
 
+
+                <!-- Detailed analysis -->
                 <h1 class="text-primary mb-5">detailed analysis</h1>
+
+                <div class="row">
+                    
+                    <!-- Columns -->
+                    <div class="col-md-6 mb-5">
+                        <h2 class="text-secondary">Columns</h2>
+                        <h5 id="r-col-rep" class="text-secondary"><i class="bi bi-check-lg"></i> Avoid repetition</h5>
+                        <hr>
+                        <h5 id="r-col-st" class="text-primary">Subtotal: 0%</h5>
+                    </div>
+
+                    <!-- Unknown values -->
+                    <div class="col-md-6 mb-5">
+                        <h2 class="text-secondary">Unknown values</h2>
+                        <h5 id="r-unk-com" class="text-secondary"><i class="bi bi-check-lg"></i> Common code</h5>
+                        <hr>
+                        <h5 id="r-unk-st" class="text-primary">Subtotal: 0%</h5>
+                    </div>
+
+                    <!-- Text fields -->
+                    <div class="col-md-6 mb-5">
+                        <h2 class="text-secondary">Text fields</h2>
+                        <h5 id="r-txt-zer" class="text-secondary"><i class="bi bi-check-lg"></i> Numeric values with zeroes to the left</h5>
+                        <hr>
+                        <h5 id="r-txt-st" class="text-primary">Subtotal: 0%</h5>
+                    </div>
+
+                    <!-- Number fields -->
+                    <div class="col-md-6 mb-5">
+                        <h2 class="text-secondary">Number fields</h2>
+                        <h5 id="r-num-sep" class="text-secondary"><i class="bi bi-check-lg"></i> Decimal separators (varies with region)</h5>
+                        <h5 id="r-num-par" class="text-secondary"><i class="bi bi-check-lg"></i> Negative values with parenthesis (minus sign)</h5>
+                        <hr>
+                        <h5 id="r-num-st" class="text-primary">Subtotal: 0%</h5>
+                    </div>
+
+                    <!-- Date fields -->
+                    <div class="col-md-6 mb-5">
+                        <h2 class="text-secondary">Date fields</h2>
+                        <h5 id="r-dat-iso" class="text-secondary"><i class="bi bi-check-lg"></i> ISO 8601 format</h5>
+                        <hr>
+                        <h5 id="r-dat-st" class="text-primary">Subtotal: 0%</h5>
+                    </div>
+
+                    <!-- Phone number fields -->
+                    <div class="col-md-6 mb-5">
+                        <h2 class="text-secondary">Phone number fields</h2>
+                        <h5 id="r-phn-cod" class="text-secondary"><i class="bi bi-check-lg"></i> Country code</h5>
+                        <hr>
+                        <h5 id="r-phn-st" class="text-primary">Subtotal: 0%</h5>
+                    </div>
+                </div>
 
             </section>
 
