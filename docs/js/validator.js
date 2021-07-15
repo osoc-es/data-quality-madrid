@@ -453,6 +453,7 @@ function reset() {
     document.getElementById("i-publisher").disabled = true;
     document.getElementById("i-keywords").disabled = true;
     document.getElementById("i-title").disabled = true;
+    document.getElementById("i-distribution").disabled = true;
 
     // Disable buttons
     document.getElementById("b-apply").classList.add("disabled");
@@ -464,6 +465,7 @@ function reset() {
     document.getElementById("i-publisher").innerHTML = "<option>None</option>";
     document.getElementById("i-keywords").value = "";
     document.getElementById("i-title").value = "";
+    document.getElementById("i-distribution").value = "";
 
     // Hide analysis results
     document.getElementById("s-results").classList.add("visually-hidden");
