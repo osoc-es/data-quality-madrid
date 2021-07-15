@@ -265,12 +265,11 @@ function validate(type) {
             document.getElementById("r-qbar-high").classList.add("visually-hidden");
             // Reset analysis result fields
             setElementToValid("r-col-rep");
-            //setElementToValid("r-unk-com");
             setElementToValid("r-txt-zer");
             setElementToValid("r-num-sep");
-            //setElementToValid("r-num-par");
             setElementToValid("r-dat-iso");
             setElementToValid("r-phn-cod");
+            setElementToValid("r-geo-col");
 
             // This is used to average the subtotals
             let total = [];
@@ -284,12 +283,6 @@ function validate(type) {
             }
             document.getElementById("r-col-st").innerText = "Subtotal: " + st + "%"
             total.push(st);
-
-            // Unknown values
-            /*st = 100;
-            //  - Common code
-            // TODO not present in the response for now
-            document.getElementById("r-unk-st").innerText = "Subtotal: " + st + "%"*/
 
             // Text fields
             st = 100;
@@ -333,6 +326,16 @@ function validate(type) {
             document.getElementById("r-phn-st").innerText = "Subtotal: " + st + "%"
             total.push(st);
 
+            // Geographic fields
+            st = 100;
+            //  - Coordinates in separate columns
+            if (r["CoordGeoGraficas"]["noSeparadas"].length > 0) {
+                setElementToInvalid("r-geo-col");
+                st -= 100;
+            }
+            document.getElementById("r-geo-st").innerText = "Subtotal: " + st + "%"
+            total.push(st);
+
 
             // Change the progress bar
             total = Math.round(total.reduce((a, b) => a + b) / total.length);
@@ -363,8 +366,6 @@ function validate(type) {
     }
 
     req.open("POST", BACKEND_URL + "validateDataset/?datasetLink=" + encodeURIComponent(dist), true);
-    // We are sending a JSON object so set the header
-    req.setRequestHeader('Content-Type', 'application/json');
     req.send(null);
 }
 
