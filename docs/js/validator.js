@@ -415,6 +415,11 @@ function validate(type) {
             // Only show observations if there is any!
             if (thereIsAnError) {
 
+                // Remove all previous observations
+                while (document.getElementById("s-observations").children.length > 1) {
+                    document.getElementById("s-observations").lastElementChild.remove();
+                }
+
                 // Generic observation to build the rest of them
                 let obs = document.getElementById("generic-observation").cloneNode(true);
                 obs.classList.remove("visually-hidden");
@@ -464,10 +469,6 @@ function reset() {
     document.getElementById("s-results").classList.add("visually-hidden");
     // Hide error message
     document.getElementById("error-message").classList.add("visually-hidden");
-
-    // Remove all observations
-    let e = document.getElementById("s-observations").lastChild;
-    
 
     // Free storage
     themes = [];
