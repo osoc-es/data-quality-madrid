@@ -252,7 +252,20 @@ function validate(type) {
             console.log(r);
 
 
-            // Set the results
+            // Set the results. First reset some fields
+            document.getElementById("r-qbar-low").classList.add("visually-hidden");
+            document.getElementById("r-qbar-high").classList.add("visually-hidden");
+            // Reset analysis result fields
+            setElementToValid("r-col-rep");
+            //setElementToValid("r-unk-com");
+            setElementToValid("r-txt-zer");
+            setElementToValid("r-num-sep");
+            //setElementToValid("r-num-par");
+            setElementToValid("r-dat-iso");
+            setElementToValid("r-phn-cod");
+
+            // This is used to average the subtotals
+            let total = [];
 
             // Columns
             let st = 100;
@@ -262,12 +275,13 @@ function validate(type) {
                 st -= 100;
             }
             document.getElementById("r-col-st").innerText = "Subtotal: " + st + "%"
+            total.push(st);
 
             // Unknown values
-            st = 100;
+            /*st = 100;
             //  - Common code
             // TODO not present in the response for now
-            document.getElementById("r-unk-st").innerText = "Subtotal: " + st + "%"
+            document.getElementById("r-unk-st").innerText = "Subtotal: " + st + "%"*/
 
             // Text fields
             st = 100;
@@ -277,6 +291,7 @@ function validate(type) {
                 st -= 100;
             }
             document.getElementById("r-txt-st").innerText = "Subtotal: " + st + "%"
+            total.push(st);
 
             // Number fields
             st = 100;
@@ -287,6 +302,7 @@ function validate(type) {
             }
             // TODO the other one?
             document.getElementById("r-num-st").innerText = "Subtotal: " + st + "%"
+            total.push(st);
 
             // Date fields
             st = 100;
@@ -297,6 +313,7 @@ function validate(type) {
             }
             // TODO the other one?
             document.getElementById("r-dat-st").innerText = "Subtotal: " + st + "%"
+            total.push(st);
 
             // Phone number fields
             st = 100;
@@ -306,6 +323,30 @@ function validate(type) {
                 st -= 100;
             }
             document.getElementById("r-phn-st").innerText = "Subtotal: " + st + "%"
+            total.push(st);
+
+
+            // Change the progress bar
+            total = Math.round(total.reduce((a, b) => a + b) / total.length);
+            if (total > 30) {
+                // Use high bar
+                let bar = document.getElementById("r-qbar-high");
+                bar.setAttribute("aria-valuenow", total);
+                bar.firstElementChild.style.width = total + "%";
+                bar.firstElementChild.firstElementChild.innerText = "quality: " + total + "%"
+                // Show
+                bar.classList.remove("visually-hidden");
+
+            } else {
+                // Use low bar
+                let bar = document.getElementById("r-qbar-low")
+                bar.setAttribute("aria-valuenow", total);
+                bar.firstElementChild.style.width = total + "%";
+                bar.lastElementChild.style.width = (100 - total) + "%";
+                bar.lastElementChild.firstChild.innerText = "quality: " + total + "%"
+                // Show
+                bar.classList.remove("visually-hidden");
+            }
 
 
             // Display the results section
@@ -340,15 +381,6 @@ function reset() {
 
     // Hide analysis results
     document.getElementById("s-results").classList.add("visually-hidden");
-
-    // Reset analysis result fields
-    setElementToValid("r-col-rep");
-    setElementToValid("r-unk-com");
-    setElementToValid("r-txt-zer");
-    setElementToValid("r-num-sep");
-    setElementToValid("r-num-par");
-    setElementToValid("r-dat-iso");
-    setElementToValid("r-phn-cod");
 
     // Free storage
     themes = [];
