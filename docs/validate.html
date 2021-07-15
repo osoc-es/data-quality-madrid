@@ -125,6 +125,10 @@
                             <button class="btn btn-outline-secondary disabled" type="button" id="b-dist-validate" onclick="validate('dist')">Validate</button>
                         </div>
                     </div>
+
+                    <span id="error-message" class="row py-2 m-2 border rounded border-primary visually-hidden">
+                        <div class="col-md-12 fs-5 text-primary"><i class="bi bi-x-octagon-fill px-1"></i> There was an error trying to validate the distribution: </div>
+                    </span>
                 </div>
             </section>
 
@@ -152,9 +156,6 @@
                 <h2 class="text-primary mb-4">observations</h2>
 
                 <div class="mb-5">
-                    <span class="row py-2 m-2 border rounded border-primary">
-                        <div class="col-md-12 fs-4 text-primary"><i class="bi bi-x-octagon-fill px-1"></i> Error message</div>
-                    </span>
                     <span class="row py-2 m-2 border rounded border-success">
                         <div class="col-md-12 text-primary"><i class="bi bi-exclamation-triangle px-1"></i> Warning message</div>
                     </span>

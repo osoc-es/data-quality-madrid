@@ -4,7 +4,6 @@ let themes = [];
 let publishers = [];
 let titles = [];
 let dists = [];
-let caca;
 
 
 
@@ -251,6 +250,15 @@ function validate(type) {
             let r = JSON.parse(req.response);
             console.log(r);
 
+            // If there was an error, show it and do not process the rest of the stuff
+            let e = document.getElementById("error-message");
+            if (r["errorProcessing"] === "") {
+                e.classList.add("visually-hidden");
+            } else {
+                e.firstElementChild.innerText += " " + r["errorProcessing"];
+                e.classList.remove("visually-hidden");
+                return;
+            }
 
             // Set the results. First reset some fields
             document.getElementById("r-qbar-low").classList.add("visually-hidden");
@@ -381,6 +389,8 @@ function reset() {
 
     // Hide analysis results
     document.getElementById("s-results").classList.add("visually-hidden");
+    // Hide error message
+    document.getElementById("error-message").classList.add("visually-hidden");
 
     // Free storage
     themes = [];
