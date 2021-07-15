@@ -1,4 +1,6 @@
 const BACKEND_URL = "https://dataquality.herokuapp.com/";
+const EXCL_MARK = "<i class='bi bi-exclamation-triangle px-1'></i>"
+const ERR_MARK = "<i class='bi bi-x-octagon-fill px-1'></i>"
 // Storage
 let themes = [];
 let publishers = [];
@@ -255,7 +257,7 @@ function validate(type) {
             if (r["errorProcessing"] === "") {
                 e.classList.add("visually-hidden");
             } else {
-                e.firstElementChild.innerText += " " + r["errorProcessing"];
+                e.firstElementChild.innerHTML = ERR_MARK + " There was an error trying to validate the distribution: " + r["errorProcessing"];
                 e.classList.remove("visually-hidden");
                 return;
             }
@@ -271,15 +273,28 @@ function validate(type) {
             setElementToValid("r-phn-cod");
             setElementToValid("r-geo-col");
 
+
+            // ------------
+            // -- Fields --
+            // ------------
+
             // This is used to average the subtotals
             let total = [];
+            // Track if there is any observation
+            let observations = [];
 
             // Columns
             let st = 100;
             //  - Avoid repetition
             if (r["columnas"]["repeticion"].length > 0) {
                 setElementToInvalid("r-col-rep");
+                thereIsAnError = true;
                 st -= 100;
+                if (r["columnas"]["repeticion"].length == 1) {
+                    observations.push("There is one repeated column");
+                } else {
+                    observations.push("There are " + r["columnas"]["repeticion"].length + " repeated columns");
+                }
             }
             document.getElementById("r-col-st").innerText = "Subtotal: " + st + "%"
             total.push(st);
@@ -289,7 +304,13 @@ function validate(type) {
             //  - Numeric values with zeroes to the left
             if (r["CamposTexto"]["ceroizquierda"].length > 0) {
                 setElementToInvalid("r-txt-zer");
+                thereIsAnError = true;
                 st -= 100;
+                if (r["CamposTexto"]["ceroizquierda"].length == 1) {
+                    observations.push("There is one text field with a numeric value that contains extra zeroes to its left");
+                } else {
+                    observations.push("There are " + r["CamposTexto"]["ceroizquierda"].length + " text fields with numeric values that contain extra zeroes to their left");
+                }
             }
             document.getElementById("r-txt-st").innerText = "Subtotal: " + st + "%"
             total.push(st);
@@ -299,7 +320,13 @@ function validate(type) {
             //  - Decimal separators (varies with region)
             if (r["CampoNumerico"]["Region"].length > 0) {
                 setElementToInvalid("r-num-sep");
+                thereIsAnError = true;
                 st -= 100; // TODO change if there is another one finally
+                if (r["CampoNumerico"]["Region"].length == 1) {
+                    observations.push("There is one numeric field which does not use the correct decimal separator");
+                } else {
+                    observations.push("There are " + r["CampoNumerico"]["Region"].length + " numeric fields which do not use the correct decimal separator");
+                }
             }
             // TODO the other one?
             document.getElementById("r-num-st").innerText = "Subtotal: " + st + "%"
@@ -310,7 +337,13 @@ function validate(type) {
             //  - ISO 8601 format
             if (r["Fechas"]["formatoFecha"].length > 0) {
                 setElementToInvalid("r-dat-iso");
+                thereIsAnError = true;
                 st -= 100; // TODO change if there is another one finally
+                if (r["Fechas"]["formatoFecha"].length == 1) {
+                    observations.push("There is one date field that does not follow the ISO 8601 format");
+                } else {
+                    observations.push("There are " + r["Fechas"]["formatoFecha"].length + " date fields that do not follow the ISO 8601 format");
+                }
             }
             // TODO the other one?
             document.getElementById("r-dat-st").innerText = "Subtotal: " + st + "%"
@@ -321,7 +354,13 @@ function validate(type) {
             //  - Country code
             if (r["CampoTelefono"]["codigopais"].length > 0) {
                 setElementToInvalid("r-phn-cod");
+                thereIsAnError = true;
                 st -= 100;
+                if (r["CampoTelefono"]["codigopais"].length > 0) {
+                    observations.push("There is one phone number field that does not include the country code");
+                } else {
+                    observations.push("There are " + r["CampoTelefono"]["codigopais"] + " phone number fields that do not include the country code");
+                }
             }
             document.getElementById("r-phn-st").innerText = "Subtotal: " + st + "%"
             total.push(st);
@@ -331,13 +370,22 @@ function validate(type) {
             //  - Coordinates in separate columns
             if (r["CoordGeoGraficas"]["noSeparadas"].length > 0) {
                 setElementToInvalid("r-geo-col");
+                thereIsAnError = true;
                 st -= 100;
+                if (r["CoordGeoGraficas"]["noSeparadas"].length > 0) {
+                    observations.push("There is one coordinate that is not represented in separate columns");
+                } else {
+                    observations.push("There are " + r["CoordGeoGraficas"]["noSeparadas"] + " coordinates that are not represented in separate columns");
+                }
             }
             document.getElementById("r-geo-st").innerText = "Subtotal: " + st + "%"
             total.push(st);
 
 
-            // Change the progress bar
+            // ------------------
+            // -- Progress bar --
+            // ------------------
+
             total = Math.round(total.reduce((a, b) => a + b) / total.length);
             if (total > 30) {
                 // Use high bar
@@ -357,6 +405,30 @@ function validate(type) {
                 bar.lastElementChild.firstChild.innerText = "quality: " + total + "%"
                 // Show
                 bar.classList.remove("visually-hidden");
+            }
+
+
+            // ------------------
+            // -- Observations --
+            // ------------------
+
+            // Only show observations if there is any!
+            if (thereIsAnError) {
+
+                // Generic observation to build the rest of them
+                let obs = document.getElementById("generic-observation").cloneNode(true);
+                obs.classList.remove("visually-hidden");
+
+                // Show overall numbers of problems in each category
+                for (o in observations) {
+                    let e = obs.cloneNode(true);
+                    e.firstElementChild.innerHTML = EXCL_MARK + " " + observations[o];
+                    document.getElementById("s-observations").appendChild(e);
+                }
+
+
+                // Display observations section
+                document.getElementById("s-observations").classList.remove("visually-hidden");
             }
 
 
@@ -392,6 +464,10 @@ function reset() {
     document.getElementById("s-results").classList.add("visually-hidden");
     // Hide error message
     document.getElementById("error-message").classList.add("visually-hidden");
+
+    // Remove all observations
+    let e = document.getElementById("s-observations").lastChild;
+    
 
     // Free storage
     themes = [];
